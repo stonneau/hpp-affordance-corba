@@ -1,0 +1,29 @@
+// Copyright (C) 2016 CNRS
+// Authors:  Anna Seppala
+//
+// This file is part of the hpp-affordance-corbaserver.
+//
+// This software is provided "as is" without warranty of any kind,
+// either expressed or implied, including but not limited to the
+// implied warranties of fitness for a particular purpose.
+//
+// See the COPYING file for more information.
+
+#ifndef HPP_AFFORDANCE_CORBA_SERVER_IDL
+# define HPP_AFFORDANCE_CORBA_SERVER_IDL
+# include <hpp/corbaserver/affordance/common.idl>
+
+module hpp
+{
+  module corbaserver {
+    module affordance {
+
+      /// Creation of a device.
+      interface Affordance {
+
+        void testFunction () raises (Error);
+      };
+    };
+  };
+};
+#endif // HPP_AFFORDANCE_CORBA_SERVER_IDL
