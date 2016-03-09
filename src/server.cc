@@ -11,15 +11,15 @@
 #include <hpp/util/exception.hh>
 #include <hpp/util/debug.hh>
 #include "hpp/corbaserver/affordance/server.hh"
-#include <affordance.impl.hh>
+#include "affordance.impl.hh"
 
 namespace hpp
 {
   namespace affordanceCorba
   {
     Server::Server (int argc, const char* argv[], bool multiThread,
-		    const std::string& poaName) : 
-      impl_ (new corba::Server <impl::Problem>
+		    const std::string& poaName) :
+      impl_ (new corba::Server <impl::Afford>
 	     (argc, argv, multiThread, poaName)) {}
     Server::~Server () { delete impl_;}
     void Server::setProblemSolver (ProblemSolverPtr_t problemSolver)

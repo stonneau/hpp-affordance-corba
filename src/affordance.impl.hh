@@ -8,13 +8,14 @@
 //
 // See the COPYING file for more information.
 
-#ifndef HPP_AFFORDANCE_CORBA_ROBOT_IMPL_HH
-# define HPP_AFFORDANCE_CORBA_ROBOT_IMPL_HH
-
+#ifndef HPP_AFFORDANCE_CORBA_IMPL_HH
+# define HPP_AFFORDANCE_CORBA_IMPL_HH
+# include <omniORB4/CORBA.h>
 # include <hpp/fcl/BVH/BVH_model.h>
 # include "hpp/core/problem-solver.hh"
 # include "hpp/corbaserver/affordance/fwd.hh"
-# include "affordance.hh" 
+# include "hpp/affordance/affordance-extraction.hh"
+# include "affordance.hh"
 
 namespace hpp
 {
@@ -22,22 +23,22 @@ namespace hpp
   {
     namespace impl
     {
-      class Affordance : public virtual
-      POA_hpp::corbaserver::affordance::Affordance
+      class Afford : public virtual
+      POA_hpp::corbaserver::affordance::Afford
       {
       public:
 
-	Affordance ();
+	Afford ();
 
 	void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
 
-	void testFunction () throw (hpp::Error);
+	void testFunction ();// throw (hpp::Error);
 
       private:
 	core::ProblemSolverPtr_t problemSolver_;
-      }; // class Affordance
+      }; // class Afford
     } // namespace impl
   } // namespace affordanceCorba
 } // namespace hpp
 
-#endif //HPP_AFFORDANCE_CORBA_ROBOT_IMPL_HH
+#endif //HPP_AFFORDANCE_CORBA_IMPL_HH

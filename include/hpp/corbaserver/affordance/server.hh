@@ -19,7 +19,12 @@ namespace hpp
 {
   namespace affordanceCorba
   {
-     class HPP_AFFORDANCE_CORBA_DLLAPI Server
+    namespace impl
+    {
+      class Afford;
+    } // namespace impl
+
+    class HPP_AFFORDANCE_CORBA_DLLAPI Server
     {
     public:
       Server (int argc, const char* argv[], bool multiThread = false,
@@ -36,10 +41,10 @@ namespace hpp
 			    const std::string& objectKind);
 
     private:
-
+      corba::Server <impl::Afford>* impl_;
       impl::Server* private_;
     };
 
   } // end of namespace affordanceCorba.
 } // end of namespace hpp.
-#endif
+#endif // HPP_AFFORDANCE_CORBA_SERVER_HH

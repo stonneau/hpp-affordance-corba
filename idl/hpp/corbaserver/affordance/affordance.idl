@@ -15,11 +15,17 @@
 
 module hpp
 {
+  /// Corba exception travelling through the Corba channel
+  exception Error
+  {
+    string msg;
+  };
+
   module corbaserver {
     module affordance {
 
       /// Creation of a device.
-      interface Affordance {
+      interface Afford {
 
         void testFunction () raises (Error);
       };

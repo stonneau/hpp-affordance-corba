@@ -27,14 +27,15 @@ INCLUDE(cmake/python.cmake)
 
 SET(PROJECT_NAME hpp-affordance-corba)
 SET(PROJECT_DESCRIPTION "Corba server for Humanoid Path Planner Affordance applications")
-
+SET(PROJECT_URL "")
 SET(${PROJECT_NAME}_HEADERS
 
-  include/hpp/affordance/fwd.hh
-
-  include/hpp/affordance/server.hh
+  include/hpp/corbaserver/affordance/fwd.hh
+  include/hpp/corbaserver/affordance/server.hh
 #  include/hpp/affordance/client.hh
   )
+
+SET(CUSTOM_HEADER_DIR hpp/corbaserver/affordance)
 
 SETUP_PROJECT ()
 
@@ -51,6 +52,19 @@ ADD_REQUIRED_DEPENDENCY("omniORB4 >= 4.1.4")
 ADD_REQUIRED_DEPENDENCY("hpp-constraints >= 3")
 ADD_REQUIRED_DEPENDENCY("hpp-model >= 3")
 ADD_REQUIRED_DEPENDENCY("hpp-affordance")
+ADD_REQUIRED_DEPENDENCY("hpp-template-corba")
+ADD_REQUIRED_DEPENDENCY("hpp-util")
+# This dependency ensures us that the intermediate __init__.py files are
+# already installed.
+ADD_REQUIRED_DEPENDENCY("hpp-corbaserver >= 2.1")
+# Make sure that python submodule is installed in the same prefix as module.
+IF (NOT ${HPP_CORBASERVER_PREFIX} STREQUAL ${CMAKE_INSTALL_PREFIX})
+  MESSAGE(WARNING
+    "  THIS PACKAGE SHOULD BE INSTALLED IN THE SAME PREFIX AS HPP-CORBASERVER,\n"
+    "  SINCE IT INSTALLS A PYTHON SUBMODULE OF HPP.CORBASERVER.")
+  MESSAGE("CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
+  MESSAGE("HPP_CORBASERVER_PREFIX=${HPP_CORBASERVER_PREFIX}")
+ENDIF()
 
 PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
 

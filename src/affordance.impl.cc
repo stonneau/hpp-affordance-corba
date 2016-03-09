@@ -20,26 +20,26 @@
 
 namespace hpp
 {
-  namespace corbaServer
+  namespace affordanceCorba
   {
     namespace impl
     {
-      namespace 
-      {
-        Affordance::Affordance () : problemSolver_ (0x0) {}
-  
-        void Affordance::setProblemSolver
+//      namespace
+//      {
+        Afford::Afford () : problemSolver_ (0x0) {}
+
+        void Afford::setProblemSolver
         (const ProblemSolverPtr_t& problemSolver)
         {
-  	  problemSolver_ = problemSolver;
+  	      problemSolver_ = problemSolver;
         }
-	
-	void Affordance::testFunction ()
-	{
-	  std::cout << "Test successful!!" << std::endl;
-	}
 
-      }
+	      void Afford::testFunction ()
+	      {
+	        std::cout << "Test successful!!" << std::endl;
+	      }
+
+//      }
     } // namespace impl
-  } // namespace wholebodyStep
+  } // namespace affordanceCorba
 } // namespace hpp
