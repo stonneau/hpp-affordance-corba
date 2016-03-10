@@ -17,31 +17,42 @@
 
 SET(LIBRARY_NAME ${PROJECT_NAME})
 SET(IDL_SOURCES
-#  common
   affordance
+  common
   )
+
+# search for python
+FINDPYTHON()
 
 OMNIIDL_INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/idl)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/src)
+FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance)
 FOREACH(IDL ${IDL_SOURCES})
   GENERATE_IDL_CPP (${IDL} ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance)
   GENERATE_IDL_PYTHON (${IDL} ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance)
-#  INSTALL(
-#    FILES ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance/${IDL}.hh
-#    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hpp/corbaserver/affordance/)
-#  INSTALL(
-#    FILES ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance/${IDL}_idl.py
-#    DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance/
-#    )
+  INSTALL(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${IDL}.hh
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hpp/corbaserver/affordance/)
+    INSTALL(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/${IDL}_idl.py
+    DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance/
+    )
 ENDFOREACH()
+
+ADD_CUSTOM_TARGET(generate_idl_cpp DEPENDS ${ALL_IDL_CPP_STUBS})
+ADD_CUSTOM_TARGET(generate_idl_python DEPENDS ${ALL_IDL_PYTHON_STUBS})
 
 ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
   server.cc
   affordance.impl.hh
   affordance.impl.cc
+  affordance.hh
   affordanceSK.cc
-  #${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance/affordance_idl.py
+  affordance_idl.py
+  common.hh
+  commonSK.cc
+  common_idl.py
 )
 
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_cpp)
@@ -52,9 +63,7 @@ PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-template-corba)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-util)
 
 INSTALL(TARGETS ${LIBRARY_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-#
-# search for python
-FINDPYTHON()
+
 
 # search for omniidl
 FIND_PROGRAM(OMNIIDL omniidl)
@@ -62,35 +71,19 @@ IF(${OMNIIDL} STREQUAL OMNIIDL-NOTFOUND)
   MESSAGE(FATAL_ERROR "cannot find omniidl.")
 ENDIF(${OMNIIDL} STREQUAL OMNIIDL-NOTFOUND)
 
-#FOREACH (IDL ${IDL_SOURCES})
-#  ADD_CUSTOM_COMMAND(
-#    OUTPUT
-#    ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance/${IDL}_idl.py
-#    COMMAND ${OMNIIDL} ARGS -bpython -Wbpackage=""
-#    ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/${IDL}.idl
-#    MAIN_DEPENDENCY
-#    ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/${IDL}.idl
-#    )
-#  SET_SOURCE_FILES_PROPERTIES(
-#    ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance/${IDL}_idl.py
-#    GENERATED=ON
-#    )
-#  INSTALL(
-#    FILES
-#    ${CMAKE_CURRENT_BINARY_DIR}/${IDL}_idl.py
-#    DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance
-#    )
-#ENDFOREACH()
-#INSTALL(
-#  FILES
-#  ${CMAKE_CURRENT_SOURCE_DIR}/hpp/corbaserver/affordance/__init__.py
-#  DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance
-#  )
-#INSTALL(
-#  FILES
-#  ${CMAKE_CURRENT_SOURCE_DIR}/hpp/corbaserver/affordance/client.py
-#  DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance
-#  )
+PYTHON_INSTALL_ON_SITE(
+  hpp/corbaserver/affordance __init__.py ${PYTHON_SITELIB}
+  )
+PYTHON_INSTALL_ON_SITE(
+  hpp/corbaserver/affordance client.py ${PYTHON_SITELIB}
+  )
+
+INSTALL(
+  FILES
+  ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/common.idl
+  ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/affordance.idl
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/idl/hpp/corbaserver/affordance
+)
 
 # Standalone corba server
 ADD_EXECUTABLE (hpp-affordance-server hpp-affordance-corba.cc)

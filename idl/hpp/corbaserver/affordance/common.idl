@@ -16,11 +16,7 @@ module hpp
 {
   /// Sequence of names
   typedef sequence <string> Names_t;
-  /// Corba exception travelling through the Corba channel
-  exception Error
-  {
-    string msg;
-  };
+
   typedef sequence<boolean> boolSeq;
   typedef sequence<long> intSeq;
   typedef sequence<intSeq> intSeqSeq;

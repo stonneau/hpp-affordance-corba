@@ -34,7 +34,7 @@ namespace hpp
   	      problemSolver_ = problemSolver;
         }
 
-	      void Afford::testFunction ()
+	      void Afford::testFunction () throw (hpp::Error)
 	      {
 	        std::cout << "Test successful!!" << std::endl;
 	      }

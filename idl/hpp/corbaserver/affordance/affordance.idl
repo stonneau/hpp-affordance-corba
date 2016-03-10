@@ -28,8 +28,8 @@ module hpp
       interface Afford {
 
         void testFunction () raises (Error);
-      };
-    };
-  };
-};
+      }; // interface Afford
+    }; // module affordance
+  }; // module corbaserver
+}; // module hpp
 #endif // HPP_AFFORDANCE_CORBA_SERVER_IDL

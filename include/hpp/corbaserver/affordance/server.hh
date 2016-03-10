@@ -42,7 +42,6 @@ namespace hpp
 
     private:
       corba::Server <impl::Afford>* impl_;
-      impl::Server* private_;
     };
 
   } // end of namespace affordanceCorba.

@@ -18,7 +18,7 @@
 from omniORB import CORBA
 import CosNaming
 
-from hpp.corbaserver.affordance import Affordance
+from hpp.corbaserver.affordance import Afford
 
 class CorbaError(Exception):
     """
@@ -46,13 +46,13 @@ class Client:
 
     name = [CosNaming.NameComponent ("hpp", "corbaserver"),
             CosNaming.NameComponent ("affordanceCorba", "affordance")]
-    
+
     try:
         obj = self.rootContext.resolve (name)
     except CosNaming.NamingContext.NotFound, ex:
         raise CorbaError ('failed to find affordance service.')
     try:
-        client = obj._narrow (Affordance)
+        client = obj._narrow (Afford)
     except KeyError:
         raise CorbaError ('invalid service name affordanceCorba')
 
@@ -60,4 +60,4 @@ class Client:
       # This happens when stubs from client and server are not synchronized.
         raise CorbaError (
             'failed to narrow client for service affordanceCorba')
-    self.problem = client
+    self.affordance = client

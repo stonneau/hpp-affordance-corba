@@ -28,14 +28,14 @@ namespace hpp
       {
       public:
 
-	Afford ();
+	      Afford ();
 
-	void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
+	      void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
 
-	void testFunction ();// throw (hpp::Error);
+	      virtual void testFunction () throw (hpp::Error);
 
       private:
-	core::ProblemSolverPtr_t problemSolver_;
+	      core::ProblemSolverPtr_t problemSolver_;
       }; // class Afford
     } // namespace impl
   } // namespace affordanceCorba
