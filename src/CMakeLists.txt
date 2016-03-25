@@ -17,8 +17,8 @@
 
 SET(LIBRARY_NAME ${PROJECT_NAME})
 SET(IDL_SOURCES
-  affordance
   common
+  affordance
   )
 
 # search for python
@@ -44,20 +44,21 @@ ADD_CUSTOM_TARGET(generate_idl_python DEPENDS ${ALL_IDL_PYTHON_STUBS})
 
 ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
-  server.cc
+  affordance.hh
+  common.hh
+  affordanceSK.cc
+  commonSK.cc
   affordance.impl.hh
   affordance.impl.cc
-  affordance.hh
-  affordanceSK.cc
   affordance_idl.py
-  common.hh
-  commonSK.cc
   common_idl.py
+  server.cc
 )
 
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_cpp)
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_python)
 
+PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-model)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-affordance)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-template-corba)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-util)
@@ -88,9 +89,11 @@ INSTALL(
 # Standalone corba server
 ADD_EXECUTABLE (hpp-affordance-server hpp-affordance-corba.cc)
 TARGET_LINK_LIBRARIES (hpp-affordance-server ${LIBRARY_NAME})
-PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-affordance)
+
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-corbaserver)
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-template-corba)
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-util)
+PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-model)
+PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-affordance)
 
 INSTALL (TARGETS hpp-affordance-server DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -14,7 +14,7 @@
 # include <hpp/fcl/BVH/BVH_model.h>
 # include "hpp/core/problem-solver.hh"
 # include "hpp/corbaserver/affordance/fwd.hh"
-# include "hpp/affordance/affordance-extraction.hh"
+
 # include "affordance.hh"
 
 namespace hpp
@@ -32,7 +32,16 @@ namespace hpp
 
 	      void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
 
-	      virtual void testFunction () throw (hpp::Error);
+        void testProblemSolver () throw (hpp::Error);
+
+	      void affordanceAnalysis (const char* obstacleName) throw (hpp::Error);
+
+				void addAffObjects (const affordance::OperationBases_t& ops,
+					const std::vector<affordance::CollisionObjects_t>& affObjs) 
+					throw (hpp::Error);
+				
+				hpp::floatSeqSeqSeqSeq* getAffordancePoints (const char* affordance)
+					throw (hpp::Error);
 
       private:
 	      core::ProblemSolverPtr_t problemSolver_;

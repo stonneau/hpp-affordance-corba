@@ -16,19 +16,28 @@
 module hpp
 {
   /// Corba exception travelling through the Corba channel
-  exception Error
+  //TODO: fix problem with common.idl declaration that are not found!!
+	exception Error
   {
     string msg;
   };
-
+  typedef sequence<float> floatSeq;
+	typedef sequence<sequence<float> > floatSeqSeq;
+	typedef sequence<sequence<sequence<float> > > floatSeqSeqSeq;
+	typedef sequence<floatSeqSeqSeq> floatSeqSeqSeqSeq;
   module corbaserver {
     module affordance {
 
       /// Creation of a device.
       interface Afford {
 
-        void testFunction () raises (Error);
-      }; // interface Afford
+        void testProblemSolver () raises (Error);
+
+        void affordanceAnalysis (in string obstacleName) raises (Error);
+
+				floatSeqSeqSeqSeq getAffordancePoints (in string affordance) raises (Error);
+
+			}; // interface Afford
     }; // module affordance
   }; // module corbaserver
 }; // module hpp
