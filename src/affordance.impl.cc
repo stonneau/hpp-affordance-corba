@@ -81,7 +81,7 @@ namespace hpp
 					}
 				}
 				
-				hpp::floatSeqSeqSeqSeq* Afford::getAffordancePoints(char const* affordance) 
+				hpp::floatSeqSeqSeqSeq* Afford::getAffordancePoints (char const* affordance) 
 					throw (hpp::Error)
 					{
 						hpp::floatSeqSeqSeqSeq *affs;
@@ -103,13 +103,13 @@ namespace hpp
 									hpp::floatSeqSeq triangle;
 									triangle.length (3);
 									for (std::size_t vertIdx= 0; vertIdx < 3; vertIdx++) {
-								  fcl::Vec3f p (model->vertices [vertIdx + 3*triIdx]);
-									hpp::floatSeq point;
-									// point always 3D
-									point.length (3); 
-									for (std::size_t idx = 0; idx < 3; idx++) {
-										point[(CORBA::ULong)idx] = p[idx];
-									}
+								    fcl::Vec3f p (model->vertices [vertIdx + 3*triIdx]);
+								  	hpp::floatSeq point;
+								  	// point always 3D
+								  	point.length (3); 
+								  	for (std::size_t idx = 0; idx < 3; idx++) {
+								  		point[(CORBA::ULong)idx] = p[idx];
+								  	}
 										triangle[(CORBA::ULong)vertIdx] = point;
 									}
 									tris[(CORBA::ULong)triIdx] = triangle;
