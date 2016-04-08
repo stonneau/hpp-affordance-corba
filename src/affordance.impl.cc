@@ -107,7 +107,8 @@ namespace hpp
 					const char* obstacleName) throw (hpp::Error)
 				{
 					if (obstacleName == "") {
-						problemSolver_->erase <std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
+						problemSolver_->erase 
+							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
 					} else {
 						// TODO: implement	
 					}
@@ -178,34 +179,36 @@ namespace hpp
 					}
 				}
 				
-				hpp::floatSeqSeqSeqSeq* Afford::getAffordancePoints (char const* affordance) 
+				hpp::doubleSeqSeqSeqSeq* Afford::getAffordancePoints (char const* affordance) 
 					throw (hpp::Error)
 					{
-						hpp::floatSeqSeqSeqSeq *affs;
-						std::vector<boost::shared_ptr<model::CollisionObject> > affObjs = problemSolver_->get 
-							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
+						hpp::doubleSeqSeqSeqSeq *affs;
+						std::vector<boost::shared_ptr<model::CollisionObject> > affObjs =
+							problemSolver_->get 
+							<std::vector<boost::shared_ptr<model::CollisionObject> > >
+							(affordance);
 					  //TODO: Add error handling for non-existent aff name
 						std::size_t nbAffs = affObjs.size ();
-						affs = new hpp::floatSeqSeqSeqSeq ();
+						affs = new hpp::doubleSeqSeqSeqSeq ();
 						affs->length ((CORBA::ULong)nbAffs);
 						for (std::size_t affIdx = 0; affIdx < nbAffs; affIdx++)
 						{
 							affordance::BVHModelOBConst_Ptr_t model =
 								affordance::GetModel (affObjs[affIdx]->fcl());
 							std::size_t nbTris = model->num_tris;
-							hpp::floatSeqSeqSeq tris;
+							hpp::doubleSeqSeqSeq tris;
 							tris.length ((CORBA::ULong)nbTris);
 							  for (std::size_t triIdx = 0; triIdx < nbTris; triIdx++)
 								{
-									hpp::floatSeqSeq triangle;
+									hpp::doubleSeqSeq triangle;
 									triangle.length (3);
 									for (std::size_t vertIdx= 0; vertIdx < 3; vertIdx++) {
-								    fcl::Vec3f p (affObjs[affIdx]->fcl ()->getRotation ()* 
+								    fcl::Vec3f p (affObjs[affIdx]->fcl ()->getRotation () * 
 											model->vertices [vertIdx + 3*triIdx] +
 											affObjs[affIdx]->fcl ()->getTranslation ());
-								  	hpp::floatSeq point;
+								  	hpp::doubleSeq point;
 								  	// point always 3D
-								  	point.length (3); 
+								  	point.length (3);
 								  	for (std::size_t idx = 0; idx < 3; idx++) {
 								  		point[(CORBA::ULong)idx] = p[idx];
 								  	}

@@ -21,10 +21,10 @@ module hpp
   {
     string msg;
   };
-  typedef sequence<float> floatSeq;
-	typedef sequence<sequence<float> > floatSeqSeq;
-	typedef sequence<sequence<sequence<float> > > floatSeqSeqSeq;
-	typedef sequence<floatSeqSeqSeq> floatSeqSeqSeqSeq;
+  typedef sequence<double> doubleSeq;
+	typedef sequence<doubleSeq> doubleSeqSeq;
+	typedef sequence<doubleSeqSeq> doubleSeqSeqSeq;
+	typedef sequence<doubleSeqSeqSeq> doubleSeqSeqSeqSeq;
   module corbaserver {
     module affordance {
 
@@ -33,9 +33,17 @@ module hpp
 
         void testProblemSolver () raises (Error);
 
-        void affordanceAnalysis (in string obstacleName) raises (Error);
+				/// creates collisionObstacles for each found affordance of 
+				/// given object. Affordances are added to a container in problemSolver
+        void analyseObject (in string obstacleName) raises (Error);
 
-				floatSeqSeqSeqSeq getAffordancePoints (in string affordance) raises (Error);
+				void analyseAll () raises (Error);
+
+				/// returns vertice points for each triangle in ieach affordance 
+				/// of specified aff type
+				doubleSeqSeqSeqSeq getAffordancePoints (in string affordance) 
+					raises (Error);
+
 
 			}; // interface Afford
     }; // module affordance

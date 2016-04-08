@@ -54,7 +54,7 @@ namespace hpp
 					const char* obstacleName) 
 					throw (hpp::Error);
 				
-				hpp::floatSeqSeqSeqSeq* getAffordancePoints (const char* affordance)
+				hpp::doubleSeqSeqSeqSeq* getAffordancePoints (const char* affordance)
 					throw (hpp::Error);
 
       private:
