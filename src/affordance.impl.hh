@@ -34,10 +34,24 @@ namespace hpp
 
         void testProblemSolver () throw (hpp::Error);
 
-	      void affordanceAnalysis (const char* obstacleName) throw (hpp::Error);
+				affordance::OperationBases_t createOperations ();
+
+				void affordanceAnalysis (const char* obstacleName, 
+					const affordance::OperationBases_t & operations) throw (hpp::Error);
+
+				void analyseObject (const char* obstacleName) throw (hpp::Error);
+				
+				void analyseAll () throw (hpp::Error);
+
+				void deleteAffordancesByType (const char* affordance,
+					const char* obstacleName) throw (hpp::Error);
+
+					void deleteAffordances (const char* obstacleName)
+						throw (hpp::Error);
 
 				void addAffObjects (const affordance::OperationBases_t& ops,
-					const std::vector<affordance::CollisionObjects_t>& affObjs) 
+					const std::vector<affordance::CollisionObjects_t>& affObjs,
+					const char* obstacleName) 
 					throw (hpp::Error);
 				
 				hpp::floatSeqSeqSeqSeq* getAffordancePoints (const char* affordance)
