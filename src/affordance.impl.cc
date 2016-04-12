@@ -49,20 +49,6 @@ namespace hpp
           }
         }
 
-				// TODO: how to implement this in a more user-friendly way?
-				//			 create an variable in problemSolver?
-				affordance::OperationBases_t Afford::createOperations ()
-				{
-					affordance::SupportOperationPtr_t support (new affordance::SupportOperation());
-          affordance::LeanOperationPtr_t lean (new affordance::LeanOperation(0.1));
-
-          affordance::OperationBases_t operations;
-          operations.push_back(support);
-          operations.push_back(lean);
-					
-					return operations;
-				}
-
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {
@@ -81,10 +67,8 @@ namespace hpp
 	      void Afford::analyseObject (const char* obstacleName) throw (hpp::Error)
 	      {
 					// first erase affordance information for obstacleName
-					/*for (unsigned int element = 0; element < 
-						problemSolver_->getAllAs<affordance::CollisionObjects_t>().size();
-						element ++)*/
-          affordance::OperationBases_t operations = createOperations ();
+				  deleteAffordances(obstacleName);	
+          affordance::OperationBases_t operations = affordance::createOperations ();
 					affordanceAnalysis (obstacleName, operations);
 				}
 
@@ -92,7 +76,7 @@ namespace hpp
 				{
 					// first clear all old affordances:
 					problemSolver_->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
-					affordance::OperationBases_t operations = createOperations ();
+					affordance::OperationBases_t operations = affordance::createOperations ();
 					for (std::list <boost::shared_ptr<model::CollisionObject> >::const_iterator objIt = 
 						problemSolver_->collisionObstacles ().begin (); 
 						objIt != problemSolver_->collisionObstacles ().end (); objIt++) 
@@ -122,31 +106,25 @@ namespace hpp
 						// if no obstacleName given, delete all affs in problemSolver
 						problemSolver_->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 					} else {
-						boost::shared_ptr<hpp::model::CollisionObject> obj;
-						for (std::list <boost::shared_ptr<hpp::model::CollisionObject> >::const_iterator objIt = 
-						problemSolver_->collisionObstacles ().begin ();
-						objIt != problemSolver_->collisionObstacles ().end (); objIt++)
-						{
-							if (obstacleName = (*objIt)->name ().c_str ()) {
-								obj = *objIt;
-							}	
-						} // TODO: deal with non-existent obstacle name!
-
 						std::list<std::string> keys =  problemSolver_->getKeys 
-							<std::vector<boost::shared_ptr<hpp::model::CollisionObject> >, std::list<std::string> > ();
-						for (std::list<std::string>::iterator affIdx = keys.begin ();
-							affIdx != keys.end (); affIdx++) {
-							std::vector<boost::shared_ptr<model::CollisionObject> > affs = problemSolver_->get 
-								<std::vector<boost::shared_ptr<model::CollisionObject> > > (*affIdx);
+							<std::vector<boost::shared_ptr<hpp::model::CollisionObject> >, 
+							std::list<std::string> > ();
+						std::list<std::string>::iterator affIt = keys.begin ();
+						for (affIt; affIt != keys.end (); affIt++) {
+							std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
+								problemSolver_->get 
+								<std::vector<boost::shared_ptr<model::CollisionObject> > > (*affIt);
 
 							for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++)
 							{
 								if (affs[objIdx]->name () == obstacleName) {
 									affs.erase(affs.begin () + objIdx);
-								} else {
-									objIdx++;
+									objIdx--;
 								}
 							}
+							problemSolver_->add
+								<std::vector<boost::shared_ptr<model::CollisionObject> > >
+								(*affIt,affs);
 						} 
 					}
 				}
@@ -220,7 +198,7 @@ namespace hpp
 							}
 							return affs;
 						}
-				
+
     } // namespace impl
   } // namespace affordanceCorba
 } // namespace hpp

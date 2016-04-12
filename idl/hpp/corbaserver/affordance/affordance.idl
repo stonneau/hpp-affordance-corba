@@ -33,10 +33,13 @@ module hpp
 
         void testProblemSolver () raises (Error);
 
-				/// creates collisionObstacles for each found affordance of 
+				/// creates collisionObjects for each found affordance of 
 				/// given object. Affordances are added to a container in problemSolver
         void analyseObject (in string obstacleName) raises (Error);
-
+				
+				/// creates collisionObjects for each affordance found in
+				/// the scene (goes through all obstacles). Affordances are added to 
+				/// a container in problemSolver.
 				void analyseAll () raises (Error);
 
 				/// returns vertice points for each triangle in ieach affordance 
