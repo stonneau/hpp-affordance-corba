@@ -94,7 +94,20 @@ namespace hpp
 						problemSolver_->erase 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
 					} else {
-						// TODO: implement	
+						std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
+							problemSolver_->get 
+							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
+
+						for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++)
+						{
+							if (affs[objIdx]->name () == obstacleName) {
+								affs.erase(affs.begin () + objIdx);
+								objIdx--;
+							}
+						}
+						problemSolver_->add
+							<std::vector<boost::shared_ptr<model::CollisionObject> > >
+							(affordance,affs);
 					}
 				}
 
