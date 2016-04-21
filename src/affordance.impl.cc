@@ -10,12 +10,7 @@
 
 #include <iostream>
 
-//#include <hpp/fcl/shape/geometric_shapes.h>
-
 #include <hpp/util/debug.hh>
-//#include <Eigen/Dense>
-//#include <hpp/model/collision-object.hh>
-//#include <hpp/corbaserver/server.hh>
 
 #include "hpp/affordance/affordance-extraction.hh"
 #include "hpp/affordance/operations.hh"
@@ -28,6 +23,7 @@ namespace hpp
   {
     namespace impl
     {
+			//	typedef std::list<boost::shared_ptr<model::CollisionObject> > CollObjList_t;
 
         Afford::Afford () : problemSolver_ (0x0) {}
 
@@ -120,10 +116,10 @@ namespace hpp
 						problemSolver_->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 					} else {
 						std::list<std::string> keys =  problemSolver_->getKeys 
-							<std::vector<boost::shared_ptr<hpp::model::CollisionObject> >, 
+							<std::vector<boost::shared_ptr<model::CollisionObject> >, 
 							std::list<std::string> > ();
 						std::list<std::string>::iterator affIt = keys.begin ();
-						for (affIt; affIt != keys.end (); affIt++) {
+						for (; affIt != keys.end (); affIt++) {
 							std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
 								problemSolver_->get 
 								<std::vector<boost::shared_ptr<model::CollisionObject> > > (*affIt);
@@ -174,6 +170,11 @@ namespace hpp
 					throw (hpp::Error)
 					{
 						hpp::doubleSeqSeqSeqSeq *affs;
+						if (!problemSolver_->has 
+							<std::vector<boost::shared_ptr<model::CollisionObject> > >
+							(std::string (affordance))) {
+							throw hpp::Error ("No affordance type of given name found. Unable to get affordance points.");
+							}
 						std::vector<boost::shared_ptr<model::CollisionObject> > affObjs =
 							problemSolver_->get 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > >
