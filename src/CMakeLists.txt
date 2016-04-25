@@ -78,6 +78,9 @@ PYTHON_INSTALL_ON_SITE(
 PYTHON_INSTALL_ON_SITE(
   hpp/corbaserver/affordance client.py ${PYTHON_SITELIB}
   )
+PYTHON_INSTALL_ON_SITE(
+  hpp/corbaserver/affordance affordance.py ${PYTHON_SITELIB}
+  )
 
 INSTALL(
   FILES
