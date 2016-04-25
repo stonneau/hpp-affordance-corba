@@ -73,3 +73,11 @@ class AffordanceTool (object):
     def getAffordancePoints (self, affordanceType):
 		    return self.client.affordance.affordance.getAffordancePoints \
 				    (affordanceType)
+
+    def loadObstacleModel (self, package, filename, prefix, \
+		  Viewer, meshPackageName=None, guiOnly=False):
+        Viewer.loadObstacleModel (package, filename, prefix, \
+            meshPackageName, guiOnly)
+        self.analyseObject (prefix + '/base_link_0')
+        print "Affordance analysis executed for obstacle"
+        return
