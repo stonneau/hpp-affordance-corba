@@ -26,6 +26,9 @@ namespace hpp
 			//	typedef std::list<boost::shared_ptr<model::CollisionObject> > CollObjList_t;
 
         Afford::Afford () : problemSolver_ (0x0) {}
+				
+				Afford::Afford (const core::ProblemSolverPtr_t& problemSolver)
+					: problemSolver_ (problemSolver) {}
 
         void Afford::setProblemSolver
         (const ProblemSolverPtr_t& problemSolver)

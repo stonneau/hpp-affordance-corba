@@ -30,6 +30,8 @@ namespace hpp
 
 	      Afford ();
 
+				Afford (const core::ProblemSolverPtr_t& problemSolver);
+
 	      void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
 
         void testProblemSolver () throw (hpp::Error);
