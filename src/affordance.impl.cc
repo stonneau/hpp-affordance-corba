@@ -23,8 +23,6 @@ namespace hpp
   {
     namespace impl
     {
-			//	typedef std::list<boost::shared_ptr<model::CollisionObject> > CollObjList_t;
-
         Afford::Afford () : problemSolver_ (0x0) {}
 				
 				Afford::Afford (const core::ProblemSolverPtr_t& problemSolver)
@@ -51,7 +49,14 @@ namespace hpp
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {
-	        try {
+					std::list<std::string> obstacles = 
+						problemSolver_->obstacleNames(true, true);
+					std::list<std::string>::iterator objIt = std::find 
+						(obstacles.begin (), obstacles.end (), obstacleName);
+					if (objIt == obstacles.end ()) {
+    	      throw hpp::Error ("No obstacle by given name found. Unable to analyse.");
+      		}
+					try {
             affordance::SemanticsDataPtr_t aff = affordance::affordanceAnalysis
                 ((problemSolver_->obstacle (obstacleName))->fcl (), operations);
  					  std::vector<std::vector<fcl::CollisionObjectPtr_t > > affObjs = 
