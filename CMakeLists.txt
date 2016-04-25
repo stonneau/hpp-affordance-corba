@@ -32,7 +32,7 @@ SET(${PROJECT_NAME}_HEADERS
 
   include/hpp/corbaserver/affordance/fwd.hh
   include/hpp/corbaserver/affordance/server.hh
-  )
+)
 
 SET(CUSTOM_HEADER_DIR hpp/corbaserver/affordance)
 
@@ -55,7 +55,7 @@ ADD_REQUIRED_DEPENDENCY("hpp-template-corba")
 ADD_REQUIRED_DEPENDENCY("hpp-util")
 # This dependency ensures us that the intermediate __init__.py files are
 # already installed.
-ADD_REQUIRED_DEPENDENCY("hpp-corbaserver >= 2.1")
+ADD_REQUIRED_DEPENDENCY("hpp-corbaserver >= 3")
 # Make sure that python submodule is installed in the same prefix as module.
 IF (NOT ${HPP_CORBASERVER_PREFIX} STREQUAL ${CMAKE_INSTALL_PREFIX})
   MESSAGE(WARNING

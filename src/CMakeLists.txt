@@ -17,14 +17,16 @@
 
 SET(LIBRARY_NAME ${PROJECT_NAME})
 SET(IDL_SOURCES
-  common
   affordance
   )
 
 # search for python
 FINDPYTHON()
 
-OMNIIDL_INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/idl)
+OMNIIDL_INCLUDE_DIRECTORIES(
+		${HPP_CORBASERVER_DATAROOTDIR}/idl
+		${CMAKE_SOURCE_DIR}/idl
+		)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/src)
 FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance)
 FOREACH(IDL ${IDL_SOURCES})
@@ -45,13 +47,10 @@ ADD_CUSTOM_TARGET(generate_idl_python DEPENDS ${ALL_IDL_PYTHON_STUBS})
 ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
   affordance.hh
-  common.hh
   affordanceSK.cc
-  commonSK.cc
   affordance.impl.hh
   affordance.impl.cc
   affordance_idl.py
-  common_idl.py
   server.cc
 )
 
@@ -59,6 +58,7 @@ ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_cpp)
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_python)
 
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-model)
+PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-corbaserver)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-affordance)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-template-corba)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-util)
@@ -81,7 +81,6 @@ PYTHON_INSTALL_ON_SITE(
 
 INSTALL(
   FILES
-  ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/common.idl
   ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/affordance.idl
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/idl/hpp/corbaserver/affordance
 )

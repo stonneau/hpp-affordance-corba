@@ -11,16 +11,9 @@
 
 #ifndef HPP_AFFORDANCE_CORBA_SERVER_IDL
 # define HPP_AFFORDANCE_CORBA_SERVER_IDL
-# include <hpp/corbaserver/affordance/common.idl>
-
+# include <hpp/corbaserver/common.idl>
 module hpp
 {
-  /// Corba exception travelling through the Corba channel
-  //TODO: fix problem with common.idl declaration that are not found!!
-	exception Error
-  {
-    string msg;
-  };
   typedef sequence<double> doubleSeq;
 	typedef sequence<doubleSeq> doubleSeqSeq;
 	typedef sequence<doubleSeqSeq> doubleSeqSeqSeq;
