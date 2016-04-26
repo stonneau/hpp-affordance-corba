@@ -34,18 +34,6 @@ namespace hpp
   	      problemSolver_ = problemSolver;
         }
 
-        void Afford::testProblemSolver () throw (hpp::Error)
-        {
-          if (problemSolver_) {
-            std::vector<boost::shared_ptr<Eigen::Matrix<double, -1, 1> > > 
-							configs(problemSolver_->goalConfigs());
-            std::cout << "problemSolver: goalConfig = " << std::endl;
-            for (unsigned int i = 0; i < configs.size (); ++i) {
-              std::cout << *(configs[i]) << std::endl;
-            }
-          }
-        }
-
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {

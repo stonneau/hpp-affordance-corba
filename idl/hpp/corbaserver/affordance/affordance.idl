@@ -24,8 +24,6 @@ module hpp
       /// Creation of a device.
       interface Afford {
 
-        void testProblemSolver () raises (Error);
-
 				/// creates collisionObjects for each found affordance of 
 				/// given object. Affordances are added to a container in problemSolver
         void analyseObject (in string obstacleName) raises (Error);
@@ -38,6 +36,8 @@ module hpp
 				/// deletes all affordance objects of given obstacle.
 				void deleteAffordances (in string obstacleName) raises (Error);
 
+				/// deletes affordance objects of given affordance type 
+				/// for a given obstacle
 				void deleteAffordancesByType (in string affordance,
 					in string obstacleName) raises (Error);
 

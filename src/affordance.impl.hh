@@ -34,8 +34,6 @@ namespace hpp
 
 	      void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
 
-        void testProblemSolver () throw (hpp::Error);
-
 				affordance::OperationBases_t createOperations ();
 
 				void affordanceAnalysis (const char* obstacleName, 
