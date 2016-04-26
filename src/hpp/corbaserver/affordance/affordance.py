@@ -38,25 +38,18 @@ class AffordanceTool (object):
     def __init__ (self):
         self.client = CorbaClient ()
         
-    ## Get position of robot object
-    #  \param objectName name of the object.
-    #  \return transformation as a hpp.Transform object
-    def getObjectPosition (self, objectName):
-        return Transform (self.client.basic.robot.getObjectPosition \
-                          (objectName))
-
     ## \brief Remove an obstacle from outer objects of a joint body
     #
     #  \param objectName name of the object to remove,
     #  \param jointName name of the joint owning the body,
     #  \param collision whether collision with object should be computed,
     #  \param distance whether distance to object should be computed.
+		#  Also deletes affordance objects of given obstacle.
     def removeObstacleFromJoint (self, objectName, jointName, collision,
                                  distance):
-        return self.client.basic.obstacle.removeObstacleFromJoint \
+        self.client.basic.obstacle.removeObstacleFromJoint \
             (objectName, jointName, collision, distance)
-
-		## \brief Load an obstacle
+        return self.deleteAffordances (obstacleName)
 
 		## Analyse all loaded objects
     def analyseAll (self):
@@ -74,10 +67,52 @@ class AffordanceTool (object):
 		    return self.client.affordance.affordance.getAffordancePoints \
 				    (affordanceType)
 
+		## Load obstacles and visualise them in viewer
+		#  \param package ros package containing the urdf file
+		#  \param filename filename name of the urdf file without extension
+		#  \param prefix prefix added to object names in case the same file 
+		#         is loaded several times 
+		#  \param Viewer viewer object to load affordance objects to visualiser
+		#  \param meshPackageName meshPackageName ros package containing the geometry files
+    #         (collada, stl,...) if different from package
+		#  \param guiOnly whether to control only gepetto-viewer-server
     def loadObstacleModel (self, package, filename, prefix, \
 		  Viewer, meshPackageName=None, guiOnly=False):
         Viewer.loadObstacleModel (package, filename, prefix, \
             meshPackageName, guiOnly)
-        self.analyseObject (prefix + '/base_link_0')
-        print "Affordance analysis executed for obstacle"
+        self.analyseObject (prefix + '/base_link_0') # TODO: make global const
         return
+
+		## Visualise found affordance surfaces
+		#
+		# \param affType the type of affordance to be visualised
+		# \Viewer viewer object to load affordance objects to visualiser
+		# \groupName name of group in the viewer that the objects will be added to
+		# \colour vector of length 3 (rgb). Colours defined in the interval [0, 1]
+    def visualiseAffordances (self, affType, Viewer, groupName, colour):
+        objs = self.getAffordancePoints (affType)
+        count = 0
+        for aff in objs:
+          for tri in aff:
+            Viewer.client.gui.addTriangleFace('tri' + str(count), \
+						     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], 1])
+            Viewer.client.gui.addToGroup('tri' + str(count), groupName)
+            count += 1
+
+        return
+
+		## Delete affordances for given object. If no objectName provided,
+		#        all affordances will be deleted.
+		# \param obstacleName name of obstacle the affordances of which will
+		#        be deleted.
+    def deleteAffordances (self, obstacleName=""):
+        return self.deleteAffordances (obstacleName)
+
+		## Delete affordances for given object. If no objectName provided,
+		#        all affordances of given type will be deleted, irrespective
+		#        of object.
+		# \param affordanceType type of affordance to be deleted
+		# \param obstacleName name of obstacle the affordances of which will
+		#        be deleted.
+    def deleteAffordancesByType (self, affordanceType, obstacleName=""):
+        return self.deleteAffordancesByType(affordanceType, obstacleName)

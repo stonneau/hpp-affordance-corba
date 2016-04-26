@@ -35,6 +35,12 @@ module hpp
 				/// a container in problemSolver.
 				void analyseAll () raises (Error);
 
+				/// deletes all affordance objects of given obstacle.
+				void deleteAffordances (in string obstacleName) raises (Error);
+
+				void deleteAffordancesByType (in string affordance,
+					in string obstacleName) raises (Error);
+
 				/// returns vertice points for each triangle in ieach affordance 
 				/// of specified aff type
 				doubleSeqSeqSeqSeq getAffordancePoints (in string affordance) 
