@@ -1,6 +1,6 @@
 // Copyright (C) 2009, 2010 by Florent Lamiraux, Thomas Moulard, JRL.
 //
-// This file is part of the hpp-corbaserver.
+// This file is part of the hpp-affordance-corba.
 //
 // This software is provided "as is" without warranty of any kind,
 // either expressed or implied, including but not limited to the
