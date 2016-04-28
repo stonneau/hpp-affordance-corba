@@ -189,10 +189,11 @@ namespace hpp
 							  for (std::size_t triIdx = 0; triIdx < nbTris; triIdx++)
 								{
 									hpp::doubleSeqSeq triangle;
+									const fcl::Triangle& refTri = model->tri_indices[triIdx];
 									triangle.length (3);
 									for (std::size_t vertIdx= 0; vertIdx < 3; vertIdx++) {
 								    fcl::Vec3f p (affObjs[affIdx]->fcl ()->getRotation () * 
-											model->vertices [vertIdx + 3*triIdx] +
+											model->vertices [refTri[vertIdx]] +
 											affObjs[affIdx]->fcl ()->getTranslation ());
 								  	hpp::doubleSeq point;
 								  	// point always 3D
