@@ -94,9 +94,9 @@ class AffordanceTool (object):
         count = 0
         for aff in objs:
           for tri in aff:
-            Viewer.client.gui.addTriangleFace('tri' + str(count), \
+            Viewer.client.gui.addTriangleFace(str(affType) + '_tri' + str(count), \
 						     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], 1])
-            Viewer.client.gui.addToGroup('tri' + str(count), groupName)
+            Viewer.client.gui.addToGroup(str(affType) + '_tri' + str(count), groupName)
             count += 1
 
         return
