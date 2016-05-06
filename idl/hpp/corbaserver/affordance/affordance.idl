@@ -46,6 +46,11 @@ module hpp
 				doubleSeqSeqSeqSeq getAffordancePoints (in string affordance) 
 					raises (Error);
 
+				Names_t getAffRefObstacles (in string affordance)
+					raises (Error);
+
+
+				Names_t getAffordanceTypes () raises (Error);
 
 			}; // interface Afford
     }; // module affordance
