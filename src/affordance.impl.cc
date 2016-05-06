@@ -82,7 +82,8 @@ namespace hpp
 				void Afford::deleteAffordancesByType (const char* affordance,
 					const char* obstacleName) throw (hpp::Error)
 				{
-					if (obstacleName == "") {
+					const std::string noObject = "";
+					if (obstacleName == noObject) {
 						problemSolver_->erase 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
 					} else {
@@ -107,7 +108,8 @@ namespace hpp
 				void Afford::deleteAffordances (const char* obstacleName)
 					throw (hpp::Error)
 				{
-					if (obstacleName == "") {
+					const std::string noObject = "";
+					if (obstacleName == noObject) {
 						// if no obstacleName given, delete all affs in problemSolver
 						problemSolver_->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 					} else {
@@ -227,7 +229,7 @@ namespace hpp
 				hpp::Names_t* Afford::getAffRefObstacles (const char* affordance)
 					throw (hpp::Error)
 				{
-						hpp::Names_t ObjList;
+						std::vector<std::string> objList;
 						if (!problemSolver_->has 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > >
 							(std::string (affordance))) {
@@ -237,16 +239,14 @@ namespace hpp
 							problemSolver_->get 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > >
 							(affordance);
-						ObjList.length ((CORBA::ULong)affObjs.size ());
-						for (std::size_t affIdx = 0; affIdx < ObjList.length (); affIdx++)
+						for (std::size_t affIdx = 0; affIdx < affObjs.size (); affIdx++)
 						{
 							affordance::BVHModelOBConst_Ptr_t model =
 								affordance::GetModel (affObjs[affIdx]->fcl());
-						ObjList[(CORBA::ULong)affIdx] = affObjs[affIdx]->name ().c_str();
+						objList.push_back(affObjs[affIdx]->name ());
 						}
-						hpp::Names_t* ObjListPtr;
-						ObjListPtr = &ObjList;
-						return ObjListPtr;
+						hpp::Names_t* objListPtr = fromStringVector (objList);
+						return objListPtr;
 				}
 
 				hpp::Names_t* Afford::getAffordanceTypes () throw (hpp::Error)

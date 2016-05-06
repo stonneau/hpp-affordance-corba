@@ -53,12 +53,12 @@ class AffordanceTool (object):
 
 		## Analyse all loaded objects
     def analyseAll (self):
-		    return self.client.affordance.affordance.analyseAll ()
+        return self.client.affordance.affordance.analyseAll ()
 
     ## Analyse one object by name
 		#  \param objectName name of the object to analyse.
     def analyseObject (self, objectName):
-		    return self.client.affordance.affordance.analyseObject (objectName)
+        return self.client.affordance.affordance.analyseObject (objectName)
 
     ## Get vertex points of all triangles of an affordance type. Useful for
 		#  visualisation.
@@ -70,6 +70,9 @@ class AffordanceTool (object):
 		## Get list of affordance types used in affordance analysis.
     def getAffordanceTypes (self):
         return self.client.affordance.affordance.getAffordanceTypes ()
+
+    def getAffRefObstacles (self, affType):
+        return self.client.affordance.affordance.getAffRefObstacles (affType)
 
 		## Load obstacles and visualise them in viewer
 		#  \param package ros package containing the urdf file
@@ -96,17 +99,18 @@ class AffordanceTool (object):
     def visualiseAffordances (self, affType, Viewer, colour):
         Viewer.client.gui.deleteNode (str (affType), True)
         objs = self.getAffordancePoints (affType)
-        affs = self.getAffordanceTypes ()
-        if affType not in affs:
-          print ("Affordance type ", affType, " does not exist.")
-          return
+        refs = self.getAffRefObstacles (affType)
         Viewer.client.gui.createGroup (str (affType))
-        count = 0
         for aff in objs:
+          count = 0
           for tri in aff:
-            Viewer.client.gui.addTriangleFace (str (affType) + str (affs.index (affType)) + str(count), \
+            Viewer.client.gui.addTriangleFace (str (affType) + '-' + \
+                 str (refs[objs.index (aff)]) + '.' + \
+								 str (objs.index (aff)) + '.' + str(count), \
 						     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], 1])
-            Viewer.client.gui.addToGroup (str (affType) + str (affs.index (affType)) + str(count), str (affType))
+            Viewer.client.gui.addToGroup (str (affType) + '-' + \
+						     str (refs[objs.index (aff)]) + '.' + \
+								 str (objs.index (aff)) + '.' + str(count), str (affType))
             count += 1
         Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
         return
@@ -115,7 +119,11 @@ class AffordanceTool (object):
 		#        all affordances will be deleted.
 		# \param obstacleName name of obstacle the affordances of which will
 		#        be deleted.
-    def deleteAffordances (self, obstacleName=""):
+    def deleteAffordances (self, Viewer, obstacleName=""):
+        self.deleteAffordancesFromViewer (Viewer, obstacleName)
+        return self.client.affordance.affordance.deleteAffordances (obstacleName)
+
+    def deleteAffordancesFromViewer (self, Viewer, obstacleName=""):
         affs = self.getAffordanceTypes ()
         if obstacleName == "":
 			  	for aff in affs:
@@ -125,9 +133,15 @@ class AffordanceTool (object):
              refs = self.getAffRefObstacles (aff)
              count = 0
              while count < len(refs):
-               self.deleteNode (aff + str (refs[count]) + str (count) , True)
+               if refs[count] == obstacleName:
+                 toDelete = aff + '-' + refs[count]
+                 nodes = Viewer.client.gui.getNodeList()
+                 for node in nodes:
+                   splt = re.split ('\.', node)
+                   if splt[0] == toDelete:
+                     self.deleteNode (node, True, Viewer)
                count += 1
-        return self.deleteAffordances (obstacleName)
+        return
 
 		## Delete affordances for given object. If no objectName provided,
 		#        all affordances of given type will be deleted, irrespective
@@ -136,18 +150,29 @@ class AffordanceTool (object):
 		# \param obstacleName name of obstacle the affordances of which will
 		#        be deleted.
     def deleteAffordancesByType (self, affordanceType, Viewer, obstacleName=""):
+        self.deleteAffordancesByTypeFromViewer (affordanceType, Viewer, obstacleName)
+        return self.client.affordance.affordance.deleteAffordancesByType(affordanceType, obstacleName)
+
+    def deleteAffordancesByTypeFromViewer (self, affordanceType, Viewer, obstacleName=""):
         if obstacleName == "":
           Viewer.client.gui.deleteNode (affordanceType, True)
         else:
+           import re
            affs = self.getAffordanceTypes ()
            for aff in affs:
              if aff == affordanceType:
                refs = self.getAffRefObstacles (aff)
                count = 0
                while count < len(refs):
-                 self.deleteNode (aff + str (refs[count]) + str (count) , True)
+                 if refs[count] == obstacleName:
+                   toDelete = aff + '-' + refs[count] 
+                   nodes = Viewer.client.gui.getNodeList()
+                   for node in nodes:
+                     splt = re.split ('\.', node)
+                     if splt[0] == toDelete:
+                       self.deleteNode (node, True, Viewer)
                  count += 1
-        return self.deleteAffordancesByType(affordanceType, obstacleName)
+        return
 
 		# Delete node from viewer
 		# \param affType name of affordance node to be deleted
