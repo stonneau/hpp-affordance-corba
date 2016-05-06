@@ -57,6 +57,11 @@ namespace hpp
 				hpp::doubleSeqSeqSeqSeq* getAffordancePoints (const char* affordance)
 					throw (hpp::Error);
 
+				hpp::Names_t* getAffRefObstacles (const char* affordance)
+					throw (hpp::Error);
+
+				hpp::Names_t* getAffordanceTypes () throw (hpp::Error);
+
       private:
 	      core::ProblemSolverPtr_t problemSolver_;
       }; // class Afford

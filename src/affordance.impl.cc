@@ -175,7 +175,6 @@ namespace hpp
 							problemSolver_->get 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > >
 							(affordance);
-					  //TODO: Add error handling for non-existent aff name
 						std::size_t nbAffs = affObjs.size ();
 						affs = new hpp::doubleSeqSeqSeqSeq ();
 						affs->length ((CORBA::ULong)nbAffs);
@@ -191,7 +190,7 @@ namespace hpp
 									hpp::doubleSeqSeq triangle;
 									const fcl::Triangle& refTri = model->tri_indices[triIdx];
 									triangle.length (3);
-									for (std::size_t vertIdx= 0; vertIdx < 3; vertIdx++) {
+									for (unsigned int vertIdx= 0; vertIdx < 3; vertIdx++) {
 								    fcl::Vec3f p (affObjs[affIdx]->fcl ()->getRotation () * 
 											model->vertices [refTri[vertIdx]] +
 											affObjs[affIdx]->fcl ()->getTranslation ());
@@ -209,6 +208,61 @@ namespace hpp
 							}
 							return affs;
 						}
+
+        hpp::Names_t* fromStringVector(const std::vector<std::string>& input)
+        {
+            CORBA::ULong size = (CORBA::ULong)input.size ();
+            char** nameList = hpp::Names_t::allocbuf(size);
+            hpp::Names_t *jointNames = new hpp::Names_t (size, size, nameList);
+            for (std::size_t i = 0; i < input.size (); ++i)
+            {
+                std::string name = input[i];
+                nameList [i] =
+                        (char*) malloc (sizeof(char)*(name.length ()+1));
+                strcpy (nameList [i], name.c_str ());
+            }
+            return jointNames;
+        }
+
+				hpp::Names_t* Afford::getAffRefObstacles (const char* affordance)
+					throw (hpp::Error)
+				{
+						hpp::Names_t ObjList;
+						if (!problemSolver_->has 
+							<std::vector<boost::shared_ptr<model::CollisionObject> > >
+							(std::string (affordance))) {
+							throw hpp::Error ("No affordance type of given name found. Unable to get reference collision object.");
+							}
+						std::vector<boost::shared_ptr<model::CollisionObject> > affObjs =
+							problemSolver_->get 
+							<std::vector<boost::shared_ptr<model::CollisionObject> > >
+							(affordance);
+						ObjList.length ((CORBA::ULong)affObjs.size ());
+						for (std::size_t affIdx = 0; affIdx < ObjList.length (); affIdx++)
+						{
+							affordance::BVHModelOBConst_Ptr_t model =
+								affordance::GetModel (affObjs[affIdx]->fcl());
+						ObjList[(CORBA::ULong)affIdx] = affObjs[affIdx]->name ().c_str();
+						}
+						hpp::Names_t* ObjListPtr;
+						ObjListPtr = &ObjList;
+						return ObjListPtr;
+				}
+
+				hpp::Names_t* Afford::getAffordanceTypes () throw (hpp::Error)
+				{
+					const std::map<std::string, std::vector<boost::shared_ptr<
+						model::CollisionObject> > >& affMap = problemSolver_->map
+            <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
+        	if (affMap.empty ()) {
+        		throw hpp::Error ("No affordances found. Return empty list.");
+        	}
+					std::vector<std::string> affTypes = problemSolver_->getKeys
+            <std::vector<boost::shared_ptr<model::CollisionObject> >,
+							std::vector<std::string> > ();
+					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
+					return affTypeListPtr;
+				}
 
     } // namespace impl
   } // namespace affordanceCorba
