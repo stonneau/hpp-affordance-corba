@@ -96,8 +96,8 @@ class AffordanceTool (object):
 		# \Viewer viewer object to load affordance objects to visualiser
 		# \groupName name of group in the viewer that the objects will be added to
 		# \colour vector of length 3 (rgb). Colours defined in the interval [0, 1]
-    def visualiseAffordances (self, affType, Viewer, colour):
-        Viewer.client.gui.deleteNode (str (affType), True)
+    def visualiseAllAffordances (self, affType, Viewer, colour):
+        self.deleteNode (str (affType), True, Viewer)
         objs = self.getAffordancePoints (affType)
         refs = self.getAffRefObstacles (affType)
         Viewer.client.gui.createGroup (str (affType))
@@ -115,6 +115,31 @@ class AffordanceTool (object):
         Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
         return
 
+    def visualiseAffordances (self, affType, Viewer, colour, obstacleName=""):
+        if obstacleName == "":
+          return self.visualiseAllAffordances (affType, Viewer, colour)
+        else:
+          self.deleteAffordancesByTypeFromViewer (affType, Viewer, obstacleName)
+          nodes = Viewer.client.gui.getNodeList ()
+          if affType not in nodes: Viewer.client.gui.createGroup (str (affType))
+          objs = self.getAffordancePoints (affType)
+          refs = self.getAffRefObstacles (affType)
+          for aff in objs:
+            if refs[objs.index (aff)] == obstacleName:
+              count = 0
+              for tri in aff:
+                Viewer.client.gui.addTriangleFace (str (affType) + '-' + \
+                     str (refs[objs.index (aff)]) + '.' + \
+				      			 str (objs.index (aff)) + '.' + str(count), \
+				      	     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], 1])
+                Viewer.client.gui.addToGroup (str (affType) + '-' + \
+				      	     str (refs[objs.index (aff)]) + '.' + \
+				      			 str (objs.index (aff)) + '.' + str(count), str (affType))
+                count += 1
+          Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
+        return
+
+
 		## Delete affordances for given object. If no objectName provided,
 		#        all affordances will be deleted.
 		# \param obstacleName name of obstacle the affordances of which will
@@ -127,8 +152,9 @@ class AffordanceTool (object):
         affs = self.getAffordanceTypes ()
         if obstacleName == "":
 			  	for aff in affs:
-					  self.deleteNode (aff, True)
+					  self.deleteNode (aff, True, Viewer)
         else:
+           import re
            for aff in affs:
              refs = self.getAffRefObstacles (aff)
              count = 0
