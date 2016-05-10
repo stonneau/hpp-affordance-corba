@@ -26,7 +26,7 @@ To install hpp-affordance-corba:
 			make install
 	
   4. Optionally, install the HPP-RBPRM and HPP-RBPRM-CORBA packages that implement an efficient acyclic contact planner,
-		 and its python bindings, serpectively. (Make sure you are on branch "affordance" in both repositories!)
+		 and its python bindings, respectively. (Make sure you are on branch "affordance" in both repositories!)
 	- see https://github.com/anna-seppala/hpp-rbprm, and
 		https://github.com/anna-seppala/hpp-rbprm-corba
 
