@@ -20,6 +20,10 @@ SET(IDL_SOURCES
   affordance
   )
 
+SET(HPP_CORBASERVER_IDL_SOURCES
+  common
+)
+
 # search for python
 FINDPYTHON()
 
@@ -40,18 +44,28 @@ FOREACH(IDL ${IDL_SOURCES})
     DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance/
     )
 ENDFOREACH()
-
+FOREACH(IDL ${HPP_CORBASERVER_IDL_SOURCES})
+  GENERATE_IDL_CPP (${IDL}
+    ${HPP_CORBASERVER_DATAROOTDIR}/idl/hpp/corbaserver
+		)
+	GENERATE_IDL_PYTHON (${IDL}
+	    ${HPP_CORBASERVER_DATAROOTDIR}/idl/hpp/corbaserver
+		)
+ENDFOREACH()
 ADD_CUSTOM_TARGET(generate_idl_cpp DEPENDS ${ALL_IDL_CPP_STUBS})
 ADD_CUSTOM_TARGET(generate_idl_python DEPENDS ${ALL_IDL_PYTHON_STUBS})
 
 ADD_LIBRARY(${LIBRARY_NAME}
   SHARED
+  common.hh
+  commonSK.cc
   affordance.hh
   affordanceSK.cc
   affordance.impl.hh
   affordance.impl.cc
   affordance_idl.py
   server.cc
+  common_idl.py
 )
 
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_cpp)
@@ -87,6 +101,30 @@ INSTALL(
   ${CMAKE_SOURCE_DIR}/idl/hpp/corbaserver/affordance/affordance.idl
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/idl/hpp/corbaserver/affordance
 )
+
+# Generate and install python code for each dependency idl file
+FOREACH (IDL ${HPP_CORBASERVER_IDL_SOURCES})
+  ADD_CUSTOM_COMMAND(
+    OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/hpp/corbaserver/affordance/${IDL}_idl.py
+    COMMAND ${OMNIIDL}
+    ARGS -bpython -Wbpackage=""
+    -I${HPP_CORBASERVER_DATAROOTDIR}/idl
+    ${HPP_CORBASERVER_DATAROOTDIR}/idl/hpp/corbaserver/${IDL}.idl
+    MAIN_DEPENDENCY
+    ${HPP_CORBASERVER_DATAROOTDIR}/idl/hpp/corbaserver/${IDL}.idl
+    )
+  SET_SOURCE_FILES_PROPERTIES(
+    ${CMAKE_CURRENT_BINARY_DIR}/${IDL}_idl.py
+    GENERATED=ON
+    )
+  INSTALL(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${IDL}_idl.py
+    DESTINATION ${PYTHON_SITELIB}/hpp/corbaserver/affordance
+    )
+ENDFOREACH()
+
 
 # Standalone corba server
 ADD_EXECUTABLE (hpp-affordance-server hpp-affordance-corba.cc)
