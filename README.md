@@ -18,14 +18,20 @@ To install hpp-affordance-corba:
   2. install HPP-AFFORDANCE
 	- see https://github.com/anna-seppala/hpp-affordance
 
-  3. Use CMake to install the library. For instance:
+  3. Clone the HPP-AFFORDANCE-CORBA repository onto your local computer and update the submodule:
 
-			mkdir $HPP_AFFORDANCE_CORBA_DIR/build
-			cd $HPP_AFFORDANCE_CORBA_DIR/build
-			cd cmake ..	
+			git clone https://github.com/anna-seppala/hpp-affordance-corba.git
+			cd $HPP_AFFORDANCE_CORBA_DIR/
+			git submodule update --init --recursive
+
+  4. Use CMake to install the HPP-AFFORDANCE-CORBA library. For instance:
+
+			mkdir build
+			cd build
+			cmake ..
 			make install
-	
-  4. Optionally, install the HPP-RBPRM and HPP-RBPRM-CORBA packages that implement an efficient acyclic contact planner,
+
+  5. Optionally, install the HPP-RBPRM and HPP-RBPRM-CORBA packages that implement an efficient acyclic contact planner,
 		 and its python bindings, respectively. (Make sure you are on branch "affordance" in both repositories!)
 	- see https://github.com/anna-seppala/hpp-rbprm, and
 		https://github.com/anna-seppala/hpp-rbprm-corba
