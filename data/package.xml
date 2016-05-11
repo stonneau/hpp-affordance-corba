@@ -1,0 +1,11 @@
+<package>
+  <name>hpp-affordance-corba</name>
+  <version>0.1.0</version>
+  <description>
+    Corba server bindings for hpp-affordance.
+  </description>
+  <author>Anna Seppala</author>
+  <maintainer email="hpp@laas.fr">Anna Seppala</maintainer>
+  <license>LGPL v2</license>
+  <build_depend>hpp-affordance</build_depend>
+</package>

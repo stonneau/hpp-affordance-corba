@@ -5,4 +5,4 @@ import hpp.corbaserver.affordance.affordance_idl
 import hpp.corbaserver.affordance.common_idl
 
 from client import Client
-
+from robot import Robot

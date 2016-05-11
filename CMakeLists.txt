@@ -69,5 +69,39 @@ PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
 
 ADD_SUBDIRECTORY(src)
 
+
+SET(CATKIN_PACKAGE_SHARE_DESTINATION
+  ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
+
+install(FILES
+  data/package.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  )
+install(FILES
+  data/urdf/hyq/hyq_trunk_large.urdf
+  data/urdf/darpa.urdf
+	data/urdf/box.urdf
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
+  )
+
+install(FILES
+  data/srdf/hyq/hyq_trunk_large.srdf
+  data/srdf/darpa.srdf
+	data/srdf/box.srdf
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
+  )
+
+install(FILES
+  data/meshes/darpareduced.stl
+	data/meshes/box.stl
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
+  )
+
+install(FILES
+  data/meshes/hyq/hyq_all.stl
+  data/meshes/hyq/hyq_trunk_large.stl
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/hyq
+  )
+
 SETUP_PROJECT_FINALIZE()
 SETUP_PROJECT_CPACK()

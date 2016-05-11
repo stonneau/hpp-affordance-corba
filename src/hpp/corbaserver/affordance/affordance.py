@@ -87,7 +87,12 @@ class AffordanceTool (object):
 		  Viewer, meshPackageName=None, guiOnly=False):
         Viewer.loadObstacleModel (package, filename, prefix, \
             meshPackageName, guiOnly)
-        self.analyseObject (prefix + '/base_link_0') # TODO: make global const
+        import re
+        objNames = self.client.basic.obstacle.getObstacleNames(True,False)
+        for name in objNames:
+          splt = re.split ('/', name)
+          if splt[0] == prefix :
+            self.analyseObject (name)
         return
 
 		## Visualise found affordance surfaces
@@ -112,6 +117,7 @@ class AffordanceTool (object):
 						     str (refs[objs.index (aff)]) + '.' + \
 								 str (objs.index (aff)) + '.' + str(count), str (affType))
             count += 1
+          Viewer.client.gui.setWireFrameMode(refs[objs.index (aff)], 'WIREFRAME')
         Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
         return
 
@@ -137,6 +143,7 @@ class AffordanceTool (object):
 				      			 str (objs.index (aff)) + '.' + str(count), str (affType))
                 count += 1
           Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
+          Viewer.client.gui.setWireFrameMode(obstacleName, 'WIREFRAME')
         return
 
 
