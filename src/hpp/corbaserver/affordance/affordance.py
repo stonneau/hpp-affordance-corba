@@ -153,11 +153,14 @@ class AffordanceTool (object):
 		#		collisionObjectacle of that object is set into WIREFRAME mode in the
 		#		viewer. This is visually preferrable.
 		#
+
 		#  \param affType the type of affordance to be visualised
 		#  \Viewer viewer object to load affordance objects to visualiser
 		#  \groupName name of group in the viewer that the objects will be added to
-		#  \colour vector of length 3 (rgb). Colours are defined in the interval [0, 1]
+		#  \colour vector of length 4 (normalized rgba). Colours defined in the interval [0, 1]
     def visualiseAllAffordances (self, affType, Viewer, colour):
+        if len(colour) < 4 : # if the colour is only rgb we suppose alpha = 1 
+          colour = colour + [1]
         self.deleteNode (str (affType), True, Viewer)
         objs = self.getAffordancePoints (affType)
         refs = self.getAffRefObstacles (affType)
@@ -168,13 +171,17 @@ class AffordanceTool (object):
             Viewer.client.gui.addTriangleFace (str (affType) + '-' + \
                  str (refs[objs.index (aff)]) + '.' + \
 								 str (objs.index (aff)) + '.' + str(count), \
-						     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], 1])
+						     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], colour[3]])
             Viewer.client.gui.addToGroup (str (affType) + '-' + \
 						     str (refs[objs.index (aff)]) + '.' + \
 								 str (objs.index (aff)) + '.' + str(count), str (affType))
             count += 1
-          Viewer.client.gui.setWireFrameMode(refs[objs.index (aff)], 'WIREFRAME')
+        groupNodes = Viewer.client.gui.getGroupNodeList(Viewer.sceneName)
         Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
+        # By default, oldest node is displayed in front. Removing and re-adding object from scene assure that the new triangles are displayed on top     
+        for groupNode in groupNodes :
+            Viewer.client.gui.removeFromGroup(groupNode,Viewer.sceneName)
+            Viewer.client.gui.addToGroup(groupNode,Viewer.sceneName)     
         return
 
 		## \brief Visualise affordance surfaces of given type for one obstacle.
@@ -200,10 +207,12 @@ class AffordanceTool (object):
 		#
 		#	 \param affType the type of affordance to be visualised
 		#  \param Viewer viewer object to load affordance objects to visualiser
-		#  \colour vector of length 3 (rgb). Colours are defined in the interval [0, 1]
+		#  \colour vector of length 4 (normalized rgba). Colours defined in the interval [0, 1]
 		#  \param obstacleName Name of collision obstacle for which affordances
 		#		will be visualised
     def visualiseAffordances (self, affType, Viewer, colour, obstacleName=""):
+        if len(colour) < 4 : # if the colour is only rgb we suppose alpha = 1 
+          colour = colour + [1]
         if obstacleName == "":
           return self.visualiseAllAffordances (affType, Viewer, colour)
         else:
@@ -216,16 +225,19 @@ class AffordanceTool (object):
             if refs[objs.index (aff)] == obstacleName:
               count = 0
               for tri in aff:
-                Viewer.client.gui.addTriangleFace (str (affType) + '-' + \
-                     str (refs[objs.index (aff)]) + '.' + \
-				      			 str (objs.index (aff)) + '.' + str(count), \
-				      	     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], 1])
-                Viewer.client.gui.addToGroup (str (affType) + '-' + \
-				      	     str (refs[objs.index (aff)]) + '.' + \
-				      			 str (objs.index (aff)) + '.' + str(count), str (affType))
+                name = str (affType) + '-' + \
+                str (refs[objs.index (aff)]) + '.' + \
+         str (objs.index (aff)) + '.' + str(count)
+                Viewer.client.gui.addTriangleFace (name, \
+				      	     tri[0], tri[1], tri[2], [colour[0], colour[1], colour[2], colour[3]])
+                Viewer.client.gui.addToGroup (name, str (affType))
                 count += 1
+          groupNodes = Viewer.client.gui.getGroupNodeList(Viewer.sceneName)
           Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
-          Viewer.client.gui.setWireFrameMode(obstacleName, 'WIREFRAME')
+          # By default, oldest node is displayed in front. Removing and re-adding object from scene assure that the new triangles are displayed on top     
+          for groupNode in groupNodes :
+              Viewer.client.gui.removeFromGroup(groupNode,Viewer.sceneName)
+              Viewer.client.gui.addToGroup(groupNode,Viewer.sceneName) 
         return
 
 
