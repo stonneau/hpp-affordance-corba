@@ -26,6 +26,8 @@ module hpp
 
 				/// creates collisionObjects for each found affordance of 
 				/// given object. Affordances are added to a container in problemSolver
+				///
+				/// \param obstacleName Name of the collisionObstacle to be analysed
         void analyseObject (in string obstacleName) raises (Error);
 				
 				/// creates collisionObjects for each affordance found in
@@ -34,22 +36,36 @@ module hpp
 				void analyseAll () raises (Error);
 
 				/// deletes all affordance objects of given obstacle.
+				///
+				/// \param obstacleName name of obstacle, the affordances of which will
+				/// be deleted
 				void deleteAffordances (in string obstacleName) raises (Error);
 
 				/// deletes affordance objects of given affordance type 
 				/// for a given obstacle
+				/// \param affordance Type of affordance to be deleted
+				/// \param obstacleName name of obstacle, the affordances of which will
+				/// be deleted.
 				void deleteAffordancesByType (in string affordance,
 					in string obstacleName) raises (Error);
 
-				/// returns vertice points for each triangle in ieach affordance 
+				/// returns vertice points for each triangle in each affordance object
 				/// of specified aff type
+				/// \param affordance Affordance type for which triangle points
+				///	are searched.
 				doubleSeqSeqSeqSeq getAffordancePoints (in string affordance) 
 					raises (Error);
 
+				/// returns a list of reference obstacles corresponding to the
+				/// affordance object. The size of the return variable is equal
+				/// to the number of affordances of given type.
+				///
+				/// \parame affordance Affordance type for which reference obstacles
+				/// are searched.
 				Names_t getAffRefObstacles (in string affordance)
 					raises (Error);
 
-
+				/// Get list of affordance types used in affordance analysis.
 				Names_t getAffordanceTypes () raises (Error);
 
 			}; // interface Afford
