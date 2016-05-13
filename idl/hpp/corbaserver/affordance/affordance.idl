@@ -24,22 +24,48 @@ module hpp
       /// Creation of a device.
       interface Afford {
 
+				/// reset the current configuration of the given affordance type
+				/// requirement to default values
 				void resetAffordanceConfig() raises (Error);
 		
+				/// changes the default configuration of the given affordance type requirement
 				///
+				///	The configuration vector has size 3 and comprises the error margin,
+				/// the angle margin for neighbouring triangles and the minimum area,
+				/// in that order.
+				///
+				/// \param affType affordance type for which the change is made
+				/// \param conf configuration vector of size 3
 				void setAffordanceConfig (in string affType, in doubleSeq conf)
 					raises (Error);
 
+				/// returns the configuration of the given affordance type requirement
+				///
+				///	\param affType affordance type for which the configuration is requested
 				doubleSeq getAffordanceConfig (in string affType) raises (Error);
 
+				/// changes the error margin used to evaluate the affordance requirement
+				/// of a given affordance type
+				///
+				/// \param affType affordance type for which the change is made
+				/// \param margin new value for the error margin
 				void setMargin (in string affType, in double margin) raises (Error);
-
+				
+				/// changes the angle margin used to evaluate whether neighbouring
+				/// triangles form part of the potential affordance as the current
+				/// triangle.
+				///
+				/// \param affType affordance type for which the change is made
+				/// \param nbTriMargin new value for the neighbouring triangle margin
 				void setNeighbouringTriangleMargin (in string affType,
 					in double nbTriMargin) raises (Error);
 
+				/// changes the minimum area used to evaluate the affordance requirement
+				/// of a given affordance type
+				/// \param affType affordance type for which the change is made
+				/// \param nimArea new value for the minimum accepted area
 					void setMinimumArea (in string affType, in double minArea)
 					raises (Error);
-
 
 				/// creates collisionObjects for each found affordance of 
 				/// given object. Affordances are added to a container in problemSolver
