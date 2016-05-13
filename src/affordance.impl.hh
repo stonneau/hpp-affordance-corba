@@ -36,6 +36,21 @@ namespace hpp
 
 				affordance::OperationBases_t createOperations ();
 
+				void setAffordanceConfig (const char* affType, const hpp::doubleSeq& conf)
+					throw (hpp::Error);
+
+				const hpp::doubleSeq* getAffordanceConfig (const char* affType)
+					throw (hpp::Error);
+					
+				void setMinimumArea (const char* affType, const double minArea)
+					throw (hpp::Error);
+
+				void Margin (const char* affType, const double margin)
+					throw (hpp::Error);
+
+				void setNeighbouringTriangleMargin (const char* affType,
+					const double nbTriMargin) throw (hpp::Error);
+
 				void affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error);
 

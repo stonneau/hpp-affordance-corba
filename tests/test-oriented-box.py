@@ -25,6 +25,9 @@ LeanColour = [0.9, 0.5, 0]
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
 
+afftool.setAffordanceConfig('Support', [0.3, 0.3, 0.05])
+afftool.setAffordanceConfig('Lean', [0.1, 0.3, 0.05])
+
 # Load obstacle models and visualise affordances. When loading an obstacle,
 # the affordance analysis is done automatically. The visualisation function
 # also sets corresponding obstacles into wireframe mode to better visualise

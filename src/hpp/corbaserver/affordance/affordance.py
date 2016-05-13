@@ -55,6 +55,9 @@ class AffordanceTool (object):
             (objectName, jointName, collision, distance)
         return self.deleteAffordances (obstacleName)
 
+    def setAffordanceConfig (self, affType, config):
+        return self.client.affordance.affordance.setAffordanceConfig(affType, config)
+
 		## \brief Analyse all loaded obstacles in the problem solver.
 		#		
 		#		All found affordance objects are added to their corresponding

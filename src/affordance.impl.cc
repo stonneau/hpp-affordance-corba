@@ -34,6 +34,67 @@ namespace hpp
   	      problemSolver_ = problemSolver;
         }
 
+				affordance::OperationBases_t Afford::createOperations ()
+				{
+					if (!problemSolver_->has 
+						<core::AffordanceConfig_t> ("Support")) {
+						problemSolver_->add 
+						<core::AffordanceConfig_t> ("Support", vector3_t (0.3,0.3,0.05));
+					}
+						const model::vector3_t & sconf = problemSolver_->get 
+							<core::AffordanceConfig_t> ("Support");
+
+					if (!problemSolver_->has 
+						<core::AffordanceConfig_t> ("Lean")) {
+						problemSolver_->add 
+						<core::AffordanceConfig_t> ("Lean", vector3_t (0.1,0.3,0.05));
+					}
+						const model::vector3_t & lconf = problemSolver_->get 
+							<core::AffordanceConfig_t> ("Lean");
+
+					affordance::SupportOperationPtr_t support 
+						(new affordance::SupportOperation(sconf[0], sconf[1], sconf[2]));
+      		affordance::LeanOperationPtr_t lean 
+						(new affordance::LeanOperation(lconf[0], lconf[1], lconf[2]));
+
+      		affordance::OperationBases_t operations;
+      		operations.push_back(support);
+      		operations.push_back(lean);
+					
+					return operations;
+				}
+
+				void Afford::setAffordanceConfig (const char* affType,
+					const hpp::doubleSeq& conf) throw (hpp::Error)
+				{
+					if (conf.length () != 3) {
+						throw hpp::Error ("Configuration vector has invalid size.");
+					}
+					const vector3_t config (conf[0], conf[1], conf[2]);
+					problemSolver_->add 
+						<core::AffordanceConfig_t> (affType, config);
+
+					const std::map<std::string, core::AffordanceConfig_t> map = problemSolver_->map
+						<core::AffordanceConfig_t> ();
+						std::cout << "map size: " << map.size () << std::endl;
+						std::cout << "config: " << config << std::endl;
+				}
+				const hpp::doubleSeq* Afford::getAffordanceConfig (const char* affType)
+					throw (hpp::Error)
+				{
+					
+				}
+
+				void Afford::setMinimumArea (const char* affType, const double minArea)
+					throw (hpp::Error)
+				{}
+				void Afford::Margin (const char* affType, const double margin)
+					throw (hpp::Error)
+				{}
+				void Afford::setNeighbouringTriangleMargin (const char* affType,
+					const double nbTriMargin) throw (hpp::Error)
+				{}
+
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {
@@ -60,7 +121,7 @@ namespace hpp
 	      {
 					// first erase affordance information for obstacleName
 				  deleteAffordances(obstacleName);	
-          affordance::OperationBases_t operations = affordance::createOperations ();
+					affordance::OperationBases_t operations = createOperations ();
 					affordanceAnalysis (obstacleName, operations);
 				}
 
@@ -68,7 +129,7 @@ namespace hpp
 				{
 					// first clear all old affordances:
 					problemSolver_->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
-					affordance::OperationBases_t operations = affordance::createOperations ();
+					affordance::OperationBases_t operations = createOperations ();
 					for (std::list <boost::shared_ptr<model::CollisionObject> >::const_iterator objIt = 
 						problemSolver_->collisionObstacles ().begin (); 
 						objIt != problemSolver_->collisionObstacles ().end (); objIt++) 
