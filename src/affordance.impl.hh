@@ -34,22 +34,24 @@ namespace hpp
 
 	      void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
 
-				affordance::OperationBases_t createOperations ();
+				void resetAffordanceConfig() throw (hpp::Error);
+
+				affordance::OperationBases_t createOperations () throw (hpp::Error);
 
 				void setAffordanceConfig (const char* affType, const hpp::doubleSeq& conf)
 					throw (hpp::Error);
 
-				const hpp::doubleSeq* getAffordanceConfig (const char* affType)
-					throw (hpp::Error);
-					
-				void setMinimumArea (const char* affType, const double minArea)
+				hpp::doubleSeq* getAffordanceConfig (const char* affType)
 					throw (hpp::Error);
 
-				void Margin (const char* affType, const double margin)
+				void setMargin (const char* affType, CORBA::Double margin)
 					throw (hpp::Error);
 
 				void setNeighbouringTriangleMargin (const char* affType,
-					const double nbTriMargin) throw (hpp::Error);
+					CORBA::Double nbTriMargin) throw (hpp::Error);
+					
+				void setMinimumArea (const char* affType, CORBA::Double minArea)
+					throw (hpp::Error);
 
 				void affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error);

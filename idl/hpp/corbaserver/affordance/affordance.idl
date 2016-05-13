@@ -24,9 +24,22 @@ module hpp
       /// Creation of a device.
       interface Afford {
 
+				void resetAffordanceConfig() raises (Error);
+		
 				///
 				void setAffordanceConfig (in string affType, in doubleSeq conf)
 					raises (Error);
+
+				doubleSeq getAffordanceConfig (in string affType) raises (Error);
+
+				void setMargin (in string affType, in double margin) raises (Error);
+
+				void setNeighbouringTriangleMargin (in string affType,
+					in double nbTriMargin) raises (Error);
+
+					void setMinimumArea (in string affType, in double minArea)
+					raises (Error);
+
 
 				/// creates collisionObjects for each found affordance of 
 				/// given object. Affordances are added to a container in problemSolver

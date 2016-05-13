@@ -32,22 +32,29 @@ namespace hpp
         (const ProblemSolverPtr_t& problemSolver)
         {
   	      problemSolver_ = problemSolver;
+					resetAffordanceConfig ();
         }
+				
+				void Afford::resetAffordanceConfig() throw (hpp::Error)
+				{
+					problemSolver_->add 
+						<core::AffordanceConfig_t> ("Support", vector3_t (0.3,0.3,0.05));
+					problemSolver_->add 
+						<core::AffordanceConfig_t> ("Lean", vector3_t (0.1,0.3,0.05));
+				}
 
-				affordance::OperationBases_t Afford::createOperations ()
+				affordance::OperationBases_t Afford::createOperations () throw (hpp::Error)
 				{
 					if (!problemSolver_->has 
 						<core::AffordanceConfig_t> ("Support")) {
-						problemSolver_->add 
-						<core::AffordanceConfig_t> ("Support", vector3_t (0.3,0.3,0.05));
+						throw hpp::Error ("No 'Support' affordance type found Afford::createOperations ()");
 					}
 						const model::vector3_t & sconf = problemSolver_->get 
 							<core::AffordanceConfig_t> ("Support");
 
 					if (!problemSolver_->has 
 						<core::AffordanceConfig_t> ("Lean")) {
-						problemSolver_->add 
-						<core::AffordanceConfig_t> ("Lean", vector3_t (0.1,0.3,0.05));
+						throw hpp::Error ("No 'Lean' affordance type found in Afford::createOperations ()");
 					}
 						const model::vector3_t & lconf = problemSolver_->get 
 							<core::AffordanceConfig_t> ("Lean");
@@ -76,24 +83,68 @@ namespace hpp
 
 					const std::map<std::string, core::AffordanceConfig_t> map = problemSolver_->map
 						<core::AffordanceConfig_t> ();
-						std::cout << "map size: " << map.size () << std::endl;
-						std::cout << "config: " << config << std::endl;
 				}
-				const hpp::doubleSeq* Afford::getAffordanceConfig (const char* affType)
+				hpp::doubleSeq* Afford::getAffordanceConfig (const char* affType)
 					throw (hpp::Error)
 				{
-					
+					if (!problemSolver_->has 
+						<core::AffordanceConfig_t> (affType)) {
+						throw hpp::Error ("No given affordance type found in Afford::getAffordanceConfig");
+					}
+					const vector3_t& config = problemSolver_->get 
+						<core::AffordanceConfig_t> (affType);
+					hpp::doubleSeq* conf = new hpp::doubleSeq ();
+					conf->length ((CORBA::ULong)config.size ());
+					for (std::size_t idx = 0; idx < conf->length(); idx++) {
+						(*conf)[(CORBA::ULong)idx] = config[idx];
+					}
+					return conf;
 				}
 
-				void Afford::setMinimumArea (const char* affType, const double minArea)
+				void Afford::setMargin (const char* affType, CORBA::Double margin)
 					throw (hpp::Error)
-				{}
-				void Afford::Margin (const char* affType, const double margin)
-					throw (hpp::Error)
-				{}
+				{
+									if (!problemSolver_->has 
+						<core::AffordanceConfig_t> (affType)) {
+						throw hpp::Error ("No given affordance type found in Afford::setMargin");
+					}
+					vector3_t config = problemSolver_->get 
+						<core::AffordanceConfig_t> (affType);
+					config[0] = margin;
+					
+					problemSolver_->add 
+						<core::AffordanceConfig_t> (affType, config);
+				}
+
 				void Afford::setNeighbouringTriangleMargin (const char* affType,
-					const double nbTriMargin) throw (hpp::Error)
-				{}
+					CORBA::Double nbTriMargin) throw (hpp::Error)
+				{
+					if (!problemSolver_->has 
+						<core::AffordanceConfig_t> (affType)) {
+						throw hpp::Error ("No given affordance type found in Afford::setNeighbouringTriangleMargin");
+					}
+					vector3_t config = problemSolver_->get 
+						<core::AffordanceConfig_t> (affType);
+					config[1] = nbTriMargin;
+					
+					problemSolver_->add 
+						<core::AffordanceConfig_t> (affType, config);
+				}
+
+				void Afford::setMinimumArea (const char* affType, CORBA::Double minArea)
+					throw (hpp::Error)
+				{
+					if (!problemSolver_->has 
+						<core::AffordanceConfig_t> (affType)) {
+						throw hpp::Error ("No given affordance type found in Afford::setMinimunArea");
+					}
+					vector3_t config = problemSolver_->get 
+						<core::AffordanceConfig_t> (affType);
+					config[2] = minArea;
+					
+					problemSolver_->add 
+						<core::AffordanceConfig_t> (affType, config);
+				}
 
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)

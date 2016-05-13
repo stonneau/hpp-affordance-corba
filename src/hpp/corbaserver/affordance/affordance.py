@@ -55,8 +55,23 @@ class AffordanceTool (object):
             (objectName, jointName, collision, distance)
         return self.deleteAffordances (obstacleName)
 
+    def resetAffordanceConfig (self):
+        self.client.affordance.affordance.resetAffordanceConfig ()
+
     def setAffordanceConfig (self, affType, config):
         return self.client.affordance.affordance.setAffordanceConfig(affType, config)
+
+    def getAffordanceConfig (self, affType):
+        return self.client.affordance.affordance.getAffordanceConfig(affType)
+
+    def setMargin (self, affType, margin):
+		    return self.client.affordance.affordance.setMargin (affType, margin)
+
+    def setNeighbouringTriangleMargin (self, affType, nbTriMargin):
+        return self.client.affordance.affordance.setNeighbouringTriangleMargin (affType, nbTriMargin)
+
+    def setMinimumArea (self, affType, minArea):
+       return self.client.affordance.affordance.setMinimumArea (affType, minArea)
 
 		## \brief Analyse all loaded obstacles in the problem solver.
 		#		
