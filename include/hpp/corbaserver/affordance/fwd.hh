@@ -46,14 +46,6 @@ namespace hpp
     typedef std::map <std::string, std::vector <fcl::Triangle> > TriangleMap_t;
     typedef std::map <std::string, std::vector <fcl::Vec3f> > VertexMap_t;
 
-//    typedef affordance::SupportOperationPtr_t SupportOperationPtr_t;
-//    typedef affordance::LeanOperationPtr_t LeanOperationPtr_t;
-//    typedef affordance::CollisionObjectPtr_t CollisionObjectPtr_t;
-//    typedef affordance::OperationBasePtr_t OperationBasePtr_t;
-//    typedef affordance::SemanticsDataPtr_t SemanticsDataPtr_t;
-//    typedef affordance::AffordancePtr_t AffordancePtr_t;
-//    typedef affordance::AffordanceExtractionPtr_t AffordanceExtractionPtr_t;
-
     typedef model::matrix_t matrix_t;
     typedef model::vector_t vector_t;
     typedef model::vector3_t vector3_t;
