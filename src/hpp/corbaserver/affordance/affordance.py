@@ -55,21 +55,49 @@ class AffordanceTool (object):
             (objectName, jointName, collision, distance)
         return self.deleteAffordances (obstacleName)
 
+    ## \brief Reset the current configuration of the given affordance
+		#		type requirement to default values.
     def resetAffordanceConfig (self):
         self.client.affordance.affordance.resetAffordanceConfig ()
 
+		## \brief  changes the default configuration of the given affordance type requirement
+    #
+    #	 The configuration vector has size 3 and comprises the error margin,
+	  #	 the angle margin for neighbouring triangles and the minimum area,
+	  #	 in that order.
+	  #	
+	  #	 \param affType affordance type for which the change is made
+	  #	 \param conf configuration vector of size 3
     def setAffordanceConfig (self, affType, config):
         return self.client.affordance.affordance.setAffordanceConfig(affType, config)
 
+    ## \brief Returns the configuration of the given affordance type requirement
+    #	
+    #		\param affType affordance type for which the configuration is requested
     def getAffordanceConfig (self, affType):
         return self.client.affordance.affordance.getAffordanceConfig(affType)
 
+		## \brief Changes the error margin used to evaluate the affordance requirement
+		#	 of a given affordance type
+		#	
+		#	 \param affType affordance type for which the change is made
+		#	 \param margin new value for the error margin
     def setMargin (self, affType, margin):
 		    return self.client.affordance.affordance.setMargin (affType, margin)
 
+		## \brief Changes the angle margin used to evaluate whether neighbouring
+		#	 triangles form part of the potential affordance as the current
+		#	 triangle.
+		#	
+		#	 \param affType affordance type for which the change is made
+		#	 \param nbTriMargin new value for the neighbouring triangle margin
     def setNeighbouringTriangleMargin (self, affType, nbTriMargin):
         return self.client.affordance.affordance.setNeighbouringTriangleMargin (affType, nbTriMargin)
 
+		## \brief	Changes the minimum area used to evaluate the affordance requirement
+		#	  of a given affordance type
+		#	 \param affType affordance type for which the change is made
+		#	 \param nimArea new value for the minimum accepted area
     def setMinimumArea (self, affType, minArea):
        return self.client.affordance.affordance.setMinimumArea (affType, minArea)
 
@@ -167,9 +195,6 @@ class AffordanceTool (object):
 		#		problem solver). triangleIndex is the index of one triangle within the
 		#		current affordance object.
 		#		Before creating the group node, any node with the same name is deleted.
-		#		After adding triangle nodes for one affordance object, the reference
-		#		collisionObjectacle of that object is set into WIREFRAME mode in the
-		#		viewer. This is visually preferrable.
 		#
 
 		#  \param affType the type of affordance to be visualised
@@ -196,7 +221,8 @@ class AffordanceTool (object):
             count += 1
         groupNodes = Viewer.client.gui.getGroupNodeList(Viewer.sceneName)
         Viewer.client.gui.addToGroup (str (affType), Viewer.sceneName)
-        # By default, oldest node is displayed in front. Removing and re-adding object from scene assure that the new triangles are displayed on top     
+        # By default, oldest node is displayed in front. Removing and re-adding
+				# object from scene assure that the new triangles are displayed on top     
         for groupNode in groupNodes :
             Viewer.client.gui.removeFromGroup(groupNode,Viewer.sceneName)
             Viewer.client.gui.addToGroup(groupNode,Viewer.sceneName)     
@@ -219,9 +245,6 @@ class AffordanceTool (object):
 		#		vector corresponding to the given affordance type (within a container in
 		#		problem solver). triangleIndex is the index of one triangle within the
 		#		current affordance object.
-		#		After adding triangle nodes for the affordance objects, their reference
-		#		collisionObjectacle (obstacleName) is set into WIREFRAME mode in the
-		#		viewer. This is visually preferrable.
 		#
 		#	 \param affType the type of affordance to be visualised
 		#  \param Viewer viewer object to load affordance objects to visualiser
