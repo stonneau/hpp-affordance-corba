@@ -42,3 +42,8 @@ To install hpp-affordance-corba:
   will have access to the code documentation. If you are using ipython, the documentation of the methods implemented
   is also directly available in a python console.
 
+##Example
+
+To see how to use the CORBA server and the affordance functionality, please refer to the python scripts provided within the 'tests' directory of this package. These python scripts use the HyQ model found in the 'data' directory (retrieved from https://github.com/iit-DLSLab/hyq-description).
+
+To run the test files, launch the hpp-affordance-server executable, then open a python terminal, and copy one of the test scripts (e.g. test-affordance-description.py) into the python terminal bit by bit. This allows you to see the procedure in the viewer as you go through the comments in the example script.

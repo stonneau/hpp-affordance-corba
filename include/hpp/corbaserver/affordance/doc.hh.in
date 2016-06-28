@@ -45,10 +45,9 @@
 /// \section hpp_affordance_corba_howto_communicate \
 /// How to communicate with the CORBA server
 ///
-/// The easiest way is
+/// The easiest way is to launch the \c hpp-affordance-server executable,
+/// open a python terminal and type:
 ///
-///     to launch \c hpp-affordance-server executable,
-///     open a python terminal and type:
 ///     \code
 ///     from hpp.corbaserver.affordance import Client as AffordanceClient
 ///     aff = AffordanceClient ()
