@@ -381,6 +381,10 @@ class AffordanceTool (object):
     def deleteNode (self, nodeName, all, Viewer):
         return Viewer.client.gui.deleteNode (nodeName, all)
 
-
+        # get list of obstacles in problem solver.
+        # 
+        # \param collision  whether to return obstacle for collision (boolean)
+        # \param distance whether to return obstacles for distance
+        #  computation (boolean).
     def getObstacleNames (self, collision, distance):
         return self.client.basic.obstacle.getObstacleNames(collision, distance)
