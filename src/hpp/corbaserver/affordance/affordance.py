@@ -381,3 +381,6 @@ class AffordanceTool (object):
     def deleteNode (self, nodeName, all, Viewer):
         return Viewer.client.gui.deleteNode (nodeName, all)
 
+
+    def getObstacleNames (self, collision, distance):
+        return self.client.basic.obstacle.getObstacleNames(collision, distance)
