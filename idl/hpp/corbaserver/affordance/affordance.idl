@@ -100,10 +100,10 @@ module hpp
 					raises (Error);
 
 				/// returns a list of reference obstacles corresponding to the
-				/// affordance object. The size of the return variable is equal
+				/// affordance type. The size of the return variable is equal
 				/// to the number of affordances of given type.
 				///
-				/// \parame affordance Affordance type for which reference obstacles
+				/// \param affordance Affordance type for which reference obstacles
 				/// are searched.
 				Names_t getAffRefObstacles (in string affordance)
 					raises (Error);
