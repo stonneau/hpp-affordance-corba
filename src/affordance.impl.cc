@@ -84,6 +84,7 @@ namespace hpp
 					const std::map<std::string, core::AffordanceConfig_t> map = problemSolver_->map
 						<core::AffordanceConfig_t> ();
 				}
+
 				hpp::doubleSeq* Afford::getAffordanceConfig (const char* affType)
 					throw (hpp::Error)
 				{
@@ -150,7 +151,7 @@ namespace hpp
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {
 					std::list<std::string> obstacles = 
-						problemSolver_->obstacleNames(true, true);
+						problemSolver_->obstacleNames(false, true);
 					std::list<std::string>::iterator objIt = std::find 
 						(obstacles.begin (), obstacles.end (), obstacleName);
 					if (objIt == obstacles.end ()) {
@@ -367,14 +368,35 @@ namespace hpp
 						model::CollisionObject> > >& affMap = problemSolver_->map
             <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
         	if (affMap.empty ()) {
-        		throw hpp::Error ("No affordances found. Return empty list.");
-        	}
+        	 std::cout << "No affordances found. Return empty list." << std::endl;
+           hpp::Names_t* empty = new hpp::Names_t ();
+           empty->length (0);
+           return empty;
+          }
 					std::vector<std::string> affTypes = problemSolver_->getKeys
             <std::vector<boost::shared_ptr<model::CollisionObject> >,
 							std::vector<std::string> > ();
 					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
 					return affTypeListPtr;
 				}
+
+        hpp::Names_t* Afford::getAffordanceConfigTypes () throw (hpp::Error)
+				{
+					const std::map<std::string, core::AffordanceConfig_t>& affMap = problemSolver_->map
+            <core::AffordanceConfig_t> ();
+        	if (affMap.empty ()) {
+        	 std::cout << "No affordance configs found. Return empty list." << std::endl;
+           hpp::Names_t* empty = new hpp::Names_t ();
+           empty->length (0);
+           return empty;
+          }
+					std::vector<std::string> affTypes = problemSolver_->getKeys
+            <core::AffordanceConfig_t,
+							std::vector<std::string> > ();
+					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
+					return affTypeListPtr;
+				}
+
 
     } // namespace impl
   } // namespace affordanceCorba

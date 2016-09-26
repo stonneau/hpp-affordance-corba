@@ -111,6 +111,9 @@ module hpp
 				/// Get list of affordance types used in affordance analysis.
 				Names_t getAffordanceTypes () raises (Error);
 
+        /// Get list of affordance configuration types used in affordance analysis.
+				Names_t getAffordanceConfigTypes () raises (Error);
+
 			}; // interface Afford
     }; // module affordance
   }; // module corbaserver

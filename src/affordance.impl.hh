@@ -79,6 +79,8 @@ namespace hpp
 
 				hpp::Names_t* getAffordanceTypes () throw (hpp::Error);
 
+        hpp::Names_t* getAffordanceConfigTypes () throw (hpp::Error);
+
       private:
 	      core::ProblemSolverPtr_t problemSolver_;
       }; // class Afford
