@@ -200,6 +200,10 @@ namespace hpp
 						problemSolver_->erase 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
 					} else {
+              if (!problemSolver_->has <std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance)) {
+                  std::cout << "Afford::deleteAffordanceByType: no affordance objects to delete" << std::endl;
+                  return;
+              }
 						std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
 							problemSolver_->get 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
