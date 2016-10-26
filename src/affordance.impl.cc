@@ -147,6 +147,34 @@ namespace hpp
 						<core::AffordanceConfig_t> (affType, config);
 				}
 
+        bool isBVHModelTriangles (const fcl::CollisionObjectPtr_t& object)
+        {
+            if (object->collisionGeometry ()->getNodeType () == fcl::BV_OBBRSS) {
+                const affordance::BVHModelOBConst_Ptr_t model = boost::static_pointer_cast<const affordance::BVHModelOB>
+                                                (object->collisionGeometry ());
+                if (model->getModelType () == fcl::BVH_MODEL_TRIANGLES) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool Afford::checkModel (const char* obstacleName) throw (hpp::Error)
+        {
+          std::list<std::string> obstacles = 
+						problemSolver_->obstacleNames(false, true);
+					std::list<std::string>::iterator objIt = std::find 
+						(obstacles.begin (), obstacles.end (), obstacleName);
+					if (objIt == obstacles.end ()) {
+    	      throw hpp::Error ("No obstacle by given name found. Unable to analyse.");
+      		}
+          if (!isBVHModelTriangles ((problemSolver_->obstacle (obstacleName))->fcl ())){
+              std::cout << "Wrong model type!" << std::endl;
+              return false;
+          }
+          return true;
+        }
+
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {

@@ -67,6 +67,12 @@ module hpp
 					void setMinimumArea (in string affType, in double minArea)
 					raises (Error);
 
+        /// checks whether obstacle model is of a type compatible with
+        /// affordance analysis. The only accepted model type is 
+        /// fcl::BVH_MODEL_TRIANGLES.
+        /// \param obstacleName Name of the collisionObstacle to be checked.
+        boolean checkModel (in string obstacleName) raises (Error);
+
 				/// creates collisionObjects for each found affordance of 
 				/// given object. Affordances are added to a container in problemSolver
 				///
