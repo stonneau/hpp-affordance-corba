@@ -169,8 +169,7 @@ namespace hpp
     	      throw hpp::Error ("No obstacle by given name found. Unable to analyse.");
       		}
           if (!isBVHModelTriangles ((problemSolver_->obstacle (obstacleName))->fcl ())){
-              std::cout << "Wrong model type!" << std::endl;
-              return false;
+              return false; // wrong model type -> return false
           }
           return true;
         }
