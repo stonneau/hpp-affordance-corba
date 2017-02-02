@@ -28,9 +28,6 @@ namespace hpp
 {
   namespace affordanceCorba
   {
-    class Server;
-    class Client;
-
     typedef core::ProblemSolver ProblemSolver;
     typedef core::ProblemSolverPtr_t ProblemSolverPtr_t;
 
@@ -59,8 +56,6 @@ namespace hpp
       using CORBA::ULong;
       using CORBA::UShort;
 
-      class Obstacle;
-      class Server;
     }
   } // end of namespace affordanceCorba.
 } // end of namespace hpp.

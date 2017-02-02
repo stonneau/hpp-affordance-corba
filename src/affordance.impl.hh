@@ -53,6 +53,8 @@ namespace hpp
 				void setMinimumArea (const char* affType, CORBA::Double minArea)
 					throw (hpp::Error);
 
+        bool checkModel (const char* obstacleName) throw (hpp::Error);
+
 				void affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error);
 
@@ -78,6 +80,8 @@ namespace hpp
 					throw (hpp::Error);
 
 				hpp::Names_t* getAffordanceTypes () throw (hpp::Error);
+
+        hpp::Names_t* getAffordanceConfigTypes () throw (hpp::Error);
 
       private:
 	      core::ProblemSolverPtr_t problemSolver_;

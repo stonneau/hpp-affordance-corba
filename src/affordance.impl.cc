@@ -84,6 +84,7 @@ namespace hpp
 					const std::map<std::string, core::AffordanceConfig_t> map = problemSolver_->map
 						<core::AffordanceConfig_t> ();
 				}
+
 				hpp::doubleSeq* Afford::getAffordanceConfig (const char* affType)
 					throw (hpp::Error)
 				{
@@ -146,11 +147,38 @@ namespace hpp
 						<core::AffordanceConfig_t> (affType, config);
 				}
 
+        bool isBVHModelTriangles (const fcl::CollisionObjectPtr_t& object)
+        {
+            if (object->collisionGeometry ()->getNodeType () == fcl::BV_OBBRSS) {
+                const affordance::BVHModelOBConst_Ptr_t model = boost::static_pointer_cast<const affordance::BVHModelOB>
+                                                (object->collisionGeometry ());
+                if (model->getModelType () == fcl::BVH_MODEL_TRIANGLES) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool Afford::checkModel (const char* obstacleName) throw (hpp::Error)
+        {
+          std::list<std::string> obstacles = 
+						problemSolver_->obstacleNames(false, true);
+					std::list<std::string>::iterator objIt = std::find 
+						(obstacles.begin (), obstacles.end (), obstacleName);
+					if (objIt == obstacles.end ()) {
+    	      throw hpp::Error ("No obstacle by given name found. Unable to analyse.");
+      		}
+          if (!isBVHModelTriangles ((problemSolver_->obstacle (obstacleName))->fcl ())){
+              return false; // wrong model type -> return false
+          }
+          return true;
+        }
+
 	      void Afford::affordanceAnalysis (const char* obstacleName, 
 					const affordance::OperationBases_t & operations) throw (hpp::Error)
 	      {
 					std::list<std::string> obstacles = 
-						problemSolver_->obstacleNames(true, true);
+						problemSolver_->obstacleNames(false, true);
 					std::list<std::string>::iterator objIt = std::find 
 						(obstacles.begin (), obstacles.end (), obstacleName);
 					if (objIt == obstacles.end ()) {
@@ -199,6 +227,10 @@ namespace hpp
 						problemSolver_->erase 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
 					} else {
+              if (!problemSolver_->has <std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance)) {
+                  std::cout << "Afford::deleteAffordanceByType: no affordance objects to delete" << std::endl;
+                  return;
+              }
 						std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
 							problemSolver_->get 
 							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
@@ -367,14 +399,35 @@ namespace hpp
 						model::CollisionObject> > >& affMap = problemSolver_->map
             <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
         	if (affMap.empty ()) {
-        		throw hpp::Error ("No affordances found. Return empty list.");
-        	}
+        	 std::cout << "No affordances found. Return empty list." << std::endl;
+           hpp::Names_t* empty = new hpp::Names_t ();
+           empty->length (0);
+           return empty;
+          }
 					std::vector<std::string> affTypes = problemSolver_->getKeys
             <std::vector<boost::shared_ptr<model::CollisionObject> >,
 							std::vector<std::string> > ();
 					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
 					return affTypeListPtr;
 				}
+
+        hpp::Names_t* Afford::getAffordanceConfigTypes () throw (hpp::Error)
+				{
+					const std::map<std::string, core::AffordanceConfig_t>& affMap = problemSolver_->map
+            <core::AffordanceConfig_t> ();
+        	if (affMap.empty ()) {
+        	 std::cout << "No affordance configs found. Return empty list." << std::endl;
+           hpp::Names_t* empty = new hpp::Names_t ();
+           empty->length (0);
+           return empty;
+          }
+					std::vector<std::string> affTypes = problemSolver_->getKeys
+            <core::AffordanceConfig_t,
+							std::vector<std::string> > ();
+					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
+					return affTypeListPtr;
+				}
+
 
     } // namespace impl
   } // namespace affordanceCorba
