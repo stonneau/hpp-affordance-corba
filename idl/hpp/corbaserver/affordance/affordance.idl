@@ -35,13 +35,26 @@ module hpp
 				/// in that order.
 				///
 				/// \param affType affordance type for which the change is made
-				/// \param conf configuration vector of size 3
+                                /// \param conf configuration vector of size 3. The parameters are (in order):
+                                /// +the margin needed for the evaluation of the requirement function,
+                                /// +the margin between two triangles tested for a single
+                                ///  affordance surface. If the angle between two triangles is greater
+                                ///  than the provided margin, the triangles cannot be part of the same
+                                ///  affordance surface.
+                                /// + the minimum area needed for the formation of an affordance object
 				void setAffordanceConfig (in string affType, in doubleSeq conf)
 					raises (Error);
 
 				/// returns the configuration of the given affordance type requirement
 				///
-				///	\param affType affordance type for which the configuration is requested
+                                ///	\param affType affordance type for which the configuration is requested.
+                                ///	\return configuration for which the values mean (in order):
+                                /// +the margin needed for the evaluation of the requirement function,
+                                /// +the margin between two triangles tested for a single
+                                ///  affordance surface. If the angle between two triangles is greater
+                                ///  than the provided margin, the triangles cannot be part of the same
+                                ///  affordance surface.
+                                /// + the minimum area needed for the formation of an affordance object
 				doubleSeq getAffordanceConfig (in string affType) raises (Error);
 
 				/// changes the error margin used to evaluate the affordance requirement
@@ -60,7 +73,7 @@ module hpp
 				void setNeighbouringTriangleMargin (in string affType,
 					in double nbTriMargin) raises (Error);
 
-				/// changes the minimum area used to evaluate the affordance requirement
+                                /// changes the minimum area used to evaluate the affordance requirement
 				/// of a given affordance type
 				/// \param affType affordance type for which the change is made
 				/// \param nimArea new value for the minimum accepted area
