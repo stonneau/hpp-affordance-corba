@@ -13,6 +13,7 @@
 # include <omniORB4/CORBA.h>
 # include <hpp/fcl/BVH/BVH_model.h>
 # include "hpp/core/problem-solver.hh"
+# include "hpp/corbaserver/problem-solver-map.hh"
 # include "hpp/corbaserver/affordance/fwd.hh"
 
 # include "affordance.hh"
@@ -32,7 +33,7 @@ namespace hpp
 
 				Afford (const core::ProblemSolverPtr_t& problemSolver);
 
-	      void setProblemSolver (const ProblemSolverPtr_t& problemSolver);
+          void setProblemSolverMap (hpp::corbaServer::ProblemSolverMapPtr_t psMap);
 
 				void resetAffordanceConfig() throw (hpp::Error);
 
@@ -84,7 +85,11 @@ namespace hpp
         hpp::Names_t* getAffordanceConfigTypes () throw (hpp::Error);
 
       private:
-	      core::ProblemSolverPtr_t problemSolver_;
+          corbaServer::ProblemSolverMapPtr_t psMap_;
+          core::ProblemSolverPtr_t problemSolver()
+          {
+              return psMap_->selected();
+          }
       }; // class Afford
     } // namespace impl
   } // namespace affordanceCorba

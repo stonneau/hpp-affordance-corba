@@ -22,9 +22,9 @@ namespace hpp
       impl_ (new corba::Server <impl::Afford>
 	     (argc, argv, multiThread, poaName)) {}
     Server::~Server () { delete impl_;}
-    void Server::setProblemSolver (ProblemSolverPtr_t problemSolver)
+    void Server::setProblemSolverMap (hpp::corbaServer::ProblemSolverMapPtr_t psMap)
     {
-      impl_->implementation ().setProblemSolver (problemSolver);
+      impl_->implementation ().setProblemSolverMap (psMap);
     }
 
     /// Start corba server

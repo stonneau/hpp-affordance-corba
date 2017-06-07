@@ -14,6 +14,7 @@
 # include <hpp/corba/template/server.hh>
 # include <hpp/corbaserver/affordance/fwd.hh>
 # include <hpp/corbaserver/affordance/config.hh>
+# include "hpp/corbaserver/problem-solver-map.hh"
 
 namespace hpp
 {
@@ -33,7 +34,7 @@ namespace hpp
       /// \brief Shutdown CORBA server
       ~Server ();
       /// Set planner that will be controlled by server
-      void setProblemSolver (ProblemSolverPtr_t problemSolver);
+      void setProblemSolverMap (hpp::corbaServer::ProblemSolverMapPtr_t psMap);
 
       void startCorbaServer(const std::string& contextId,
 			    const std::string& contextKind,

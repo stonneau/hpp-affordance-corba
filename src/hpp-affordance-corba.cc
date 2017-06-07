@@ -12,6 +12,7 @@
 #include <hpp/util/debug.hh>
 #include "hpp/corbaserver/server.hh"
 #include <hpp/corbaserver/affordance/server.hh>
+#include <hpp/corbaserver/problem-solver-map.hh>
 #include <hpp/core/problem-solver.hh>
 typedef hpp::affordanceCorba::Server AffordanceServer;
 typedef hpp::corbaServer::Server CorbaServer;
@@ -24,8 +25,8 @@ main (int argc, const char* argv[])
   ProblemSolverPtr_t problemSolver = ProblemSolver::create ();
   CorbaServer corbaServer (problemSolver, argc,
 			   const_cast<const char**> (argv), true);
-  AffordanceServer affServer (argc, const_cast<const char**> (argv), true);
-  affServer.setProblemSolver (problemSolver);
+  AffordanceServer affServer (argc, argv, true);
+  affServer.setProblemSolverMap (corbaServer.problemSolverMap());
 
   try {
     corbaServer.startCorbaServer ();
