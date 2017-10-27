@@ -172,13 +172,16 @@ namespace hpp
           return true;
         }
 
-	      void Afford::affordanceAnalysis (const char* obstacleName, 
-					const affordance::OperationBases_t & operations) throw (hpp::Error)
+          void Afford::affordanceAnalysis (const char* obstacleName,
+                    const affordance::OperationBases_t & operations, std::vector<double> reduceSizes) throw (hpp::Error)
 	      {
 					std::list<std::string> obstacles = 
                         problemSolver()->obstacleNames(true, true);
 					std::list<std::string>::iterator objIt = std::find 
 						(obstacles.begin (), obstacles.end (), obstacleName);
+                    while(reduceSizes.size()<operations.size())
+                        reduceSizes.push_back(0.);
+
 					if (objIt == obstacles.end ()) {
     	      throw hpp::Error ("No obstacle by given name found. Unable to analyse.");
       		}
@@ -186,7 +189,7 @@ namespace hpp
             affordance::SemanticsDataPtr_t aff = affordance::affordanceAnalysis
                 ((problemSolver()->obstacle (obstacleName))->fcl (), operations);
  					  std::vector<std::vector<fcl::CollisionObjectPtr_t > > affObjs = 
-					  affordance::getAffordanceObjects (aff);
+                      affordance::getReducedAffordanceObjects( aff,reduceSizes);
 						// add fcl::CollisionObstacles to problemSolver
 						addAffObjects (operations, affObjs, obstacleName);
 						} catch (const std::exception& exc) {
@@ -194,16 +197,24 @@ namespace hpp
 	        }
 	      }
 
-	      void Afford::analyseObject (const char* obstacleName) throw (hpp::Error)
+          void Afford::analyseObject (const char* obstacleName,const hpp::doubleSeq& reduceSizesCorba) throw (hpp::Error)
 	      {
+                    std::vector<double> reduceSizes;    // copy corba list to vector
+                    for(size_type i=0 ; i < (size_type)reduceSizesCorba.length() ; ++i){
+                        reduceSizes.push_back(reduceSizesCorba[(CORBA::ULong)i]);
+                    }
 					// first erase affordance information for obstacleName
 				  deleteAffordances(obstacleName);	
 					affordance::OperationBases_t operations = createOperations ();
-					affordanceAnalysis (obstacleName, operations);
+                    affordanceAnalysis (obstacleName, operations,reduceSizes);
 				}
 
-				void Afford::analyseAll () throw (hpp::Error)
+                void Afford::analyseAll (const hpp::doubleSeq &reduceSizesCorba) throw (hpp::Error)
 				{
+                    std::vector<double> reduceSizes;    // copy corba list to vector
+                    for(size_type i=0 ; i < (size_type)reduceSizesCorba.length() ; ++i){
+                        reduceSizes.push_back(reduceSizesCorba[(CORBA::ULong)i]);
+                    }
 					// first clear all old affordances:
                     problemSolver()->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 					affordance::OperationBases_t operations = createOperations ();
@@ -212,7 +223,7 @@ namespace hpp
                         objIt != problemSolver()->collisionObstacles ().end (); objIt++)
 						{
 							const char* obstacleName = (*objIt)->name ().c_str ();
-							affordanceAnalysis (obstacleName, operations);
+                            affordanceAnalysis (obstacleName, operations,reduceSizes);
 						}
 				}
 
