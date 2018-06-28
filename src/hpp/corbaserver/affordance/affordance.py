@@ -105,16 +105,20 @@ class AffordanceTool (object):
     #		
     #		All found affordance objects are added to their corresponding
     # 	container in problem solver.
-    def analyseAll (self):
-        return self.client.affordance.affordance.analyseAll ()
+    #  \param reduceSizes : dimension of the reduction applied to the plan (to shrink the borders of each affordances plans)
+    #    The order of the value in the vector correspond to the order of the affordance type creation in affordance.impl.cc : Afford::createOperations ()
+    def analyseAll (self,reduceSizes=[]):
+        return self.client.affordance.affordance.analyseAll (reduceSizes)
 
     ## \biref Analyse one object by name
     #
     #		Found affordance objects are added to a container in problem solver.
     #
     #  \param objectName name of the object to analyse.
-    def analyseObject (self, objectName):
-        return self.client.affordance.affordance.analyseObject (objectName)
+    #  \param reduceSizes : dimension of the reduction applied to the plan (to shrink the borders of each affordances plans)
+    #    The order of the value in the vector correspond to the order of the affordance type creation in affordance.impl.cc : Afford::createOperations ()
+    def analyseObject (self, objectName,reduceSizes):
+        return self.client.affordance.affordance.analyseObject (objectName,reduceSizes)
 
     ## \brief Get vertex points of all triangles of an affordance type.
     #
@@ -171,7 +175,7 @@ class AffordanceTool (object):
     #         (collada, stl,...) if different from package
     #  \param guiOnly whether to control only gepetto-viewer-server
     def loadObstacleModel (self, package, filename, prefix, \
-		  Viewer, meshPackageName=None, guiOnly=False):
+                  Viewer, meshPackageName=None, guiOnly=False,reduceSizes=[]):
         Viewer.loadObstacleModel (package, filename, prefix, \
             meshPackageName, guiOnly)
         import re
@@ -179,7 +183,7 @@ class AffordanceTool (object):
         for name in objNames:
           splt = re.split ('/', name)
           if splt[0] == prefix :
-            self.analyseObject (name)
+            self.analyseObject (name,reduceSizes)
         return
 
     ## \brief Visualise all found affordance surfaces for an affordance type.

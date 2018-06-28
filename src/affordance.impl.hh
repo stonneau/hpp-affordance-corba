@@ -57,11 +57,11 @@ namespace hpp
         bool checkModel (const char* obstacleName) throw (hpp::Error);
 
 				void affordanceAnalysis (const char* obstacleName, 
-					const affordance::OperationBases_t & operations) throw (hpp::Error);
+                    const affordance::OperationBases_t & operations,std::vector<double> reduceSizes=std::vector<double>()) throw (hpp::Error);
 
-				void analyseObject (const char* obstacleName) throw (hpp::Error);
+                void analyseObject (const char* obstacleName, const hpp::doubleSeq& reduceSizesCorba) throw (hpp::Error);
 				
-				void analyseAll () throw (hpp::Error);
+                void analyseAll (const hpp::doubleSeq& reduceSizesCorba) throw (hpp::Error);
 
 				void deleteAffordancesByType (const char* affordance,
 					const char* obstacleName) throw (hpp::Error);

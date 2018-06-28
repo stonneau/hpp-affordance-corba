@@ -90,12 +90,12 @@ module hpp
 				/// given object. Affordances are added to a container in problemSolver
 				///
 				/// \param obstacleName Name of the collisionObstacle to be analysed
-        void analyseObject (in string obstacleName) raises (Error);
+        void analyseObject (in string obstacleName,in doubleSeq reduceSizes) raises (Error);
 				
 				/// creates collisionObjects for each affordance found in
 				/// the scene (goes through all obstacles). Affordances are added to 
 				/// a container in problemSolver.
-				void analyseAll () raises (Error);
+                                void analyseAll (in doubleSeq reduceSizes) raises (Error);
 
 				/// deletes all affordance objects of given obstacle.
 				///
