@@ -40,6 +40,8 @@ namespace hpp
 						<core::AffordanceConfig_t> ("Support", vector3_t (0.3,0.3,0.05));
                     problemSolver()->add
 						<core::AffordanceConfig_t> ("Lean", vector3_t (0.1,0.3,0.05));
+                    problemSolver()->add
+                        <core::AffordanceConfig_t> ("Support45", vector3_t (0.1,0.3,0.05));
 				}
 
 				affordance::OperationBases_t Afford::createOperations () throw (hpp::Error)
@@ -58,15 +60,26 @@ namespace hpp
                         const model::vector3_t & lconf = problemSolver()->get
 							<core::AffordanceConfig_t> ("Lean");
 
-					affordance::SupportOperationPtr_t support 
+                    if (!problemSolver()->has
+                        <core::AffordanceConfig_t> ("Support45")) {
+                        throw hpp::Error ("No 'Support45' affordance type found in Afford::createOperations ()");
+                    }
+                        const model::vector3_t & s45conf = problemSolver()->get
+                            <core::AffordanceConfig_t> ("Support45");
+
+
+            affordance::SupportOperationPtr_t support
 						(new affordance::SupportOperation(sconf[0], sconf[1], sconf[2]));
       		affordance::LeanOperationPtr_t lean 
 						(new affordance::LeanOperation(lconf[0], lconf[1], lconf[2]));
+            affordance::Support45OperationPtr_t support45
+                        (new affordance::Support45Operation(s45conf[0], s45conf[1], s45conf[2]));
 
       		affordance::OperationBases_t operations;
       		operations.push_back(support);
       		operations.push_back(lean);
-					
+            operations.push_back(support45);
+
 					return operations;
 				}
 
