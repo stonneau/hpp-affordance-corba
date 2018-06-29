@@ -46,8 +46,7 @@ ENDIF()
 
 # Dependencies
 ADD_REQUIRED_DEPENDENCY("hpp-core >= 3")
-ADD_REQUIRED_DEPENDENCY("hpp-model >= 3")
-ADD_REQUIRED_DEPENDENCY("hpp-model-urdf >= 3")
+ADD_REQUIRED_DEPENDENCY("hpp-pinocchio >= 3")
 ADD_REQUIRED_DEPENDENCY("omniORB4 >= 4.1.4")
 ADD_REQUIRED_DEPENDENCY("hpp-constraints >= 3")
 ADD_REQUIRED_DEPENDENCY("hpp-affordance")

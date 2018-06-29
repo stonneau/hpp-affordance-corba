@@ -14,11 +14,17 @@
 
 #include "hpp/affordance/affordance-extraction.hh"
 #include "hpp/affordance/operations.hh"
-#include <hpp/model/collision-object.hh>
+#include <hpp/pinocchio/collision-object.hh>
+#include <hpp/core/problem-solver.hh>
 #include "affordance.impl.hh"
 
 namespace hpp
 {
+  typedef std::vector<pinocchio::CollisionObjectPtr_t> ObjectStdVector_t;
+  typedef hpp::core::FclCollisionObject FclCollisionObject;
+  typedef hpp::core::FclCollisionObject* FclCollisionObjectPtr_t;
+  typedef hpp::core::FclCollisionObjectSharePtr_t FclCollisionObjectSharePtr_t;
+  typedef hpp::core::AffordanceObjects_t AffordanceObjects_t;
   namespace affordanceCorba
   {
     namespace impl
@@ -36,36 +42,27 @@ namespace hpp
 				
 				void Afford::resetAffordanceConfig() throw (hpp::Error)
 				{
-                    problemSolver()->add
-						<core::AffordanceConfig_t> ("Support", vector3_t (0.3,0.3,0.05));
-                    problemSolver()->add
-						<core::AffordanceConfig_t> ("Lean", vector3_t (0.1,0.3,0.05));
-                    problemSolver()->add
-                        <core::AffordanceConfig_t> ("Support45", vector3_t (0.1,0.3,0.05));
+                    problemSolver()->affordanceConfigs.add("Support", vector3_t (0.3,0.3,0.05));
+                    problemSolver()->affordanceConfigs.add("Lean", vector3_t (0.1,0.3,0.05));
+                    problemSolver()->affordanceConfigs.add("Support45", vector3_t (0.1,0.3,0.05));
 				}
 
 				affordance::OperationBases_t Afford::createOperations () throw (hpp::Error)
 				{
-                    if (!problemSolver()->has
-						<core::AffordanceConfig_t> ("Support")) {
+                    if (!problemSolver()->affordanceConfigs.has("Support")) {
 						throw hpp::Error ("No 'Support' affordance type found Afford::createOperations ()");
 					}
-                        const model::vector3_t & sconf = problemSolver()->get
-							<core::AffordanceConfig_t> ("Support");
+                        const hpp::pinocchio::vector3_t & sconf = problemSolver()->affordanceConfigs.get("Support");
 
-                    if (!problemSolver()->has
-						<core::AffordanceConfig_t> ("Lean")) {
+                    if (!problemSolver()->affordanceConfigs.has("Lean")) {
 						throw hpp::Error ("No 'Lean' affordance type found in Afford::createOperations ()");
 					}
-                        const model::vector3_t & lconf = problemSolver()->get
-							<core::AffordanceConfig_t> ("Lean");
+                        const hpp::pinocchio::vector3_t & lconf = problemSolver()->affordanceConfigs.get("Lean");
 
-                    if (!problemSolver()->has
-                        <core::AffordanceConfig_t> ("Support45")) {
+                    if (!problemSolver()->affordanceConfigs.has("Support45")) {
                         throw hpp::Error ("No 'Support45' affordance type found in Afford::createOperations ()");
                     }
-                        const model::vector3_t & s45conf = problemSolver()->get
-                            <core::AffordanceConfig_t> ("Support45");
+                        const hpp::pinocchio::vector3_t & s45conf = problemSolver()->affordanceConfigs.get("Support45");
 
 
             affordance::SupportOperationPtr_t support
@@ -90,21 +87,18 @@ namespace hpp
 						throw hpp::Error ("Configuration vector has invalid size.");
 					}
 					const vector3_t config (conf[0], conf[1], conf[2]);
-                    problemSolver()->add
-						<core::AffordanceConfig_t> (affType, config);
+                    problemSolver()->affordanceConfigs.add(affType, config);
 
-                    const std::map<std::string, core::AffordanceConfig_t> map = problemSolver()->map
-						<core::AffordanceConfig_t> ();
+                    /*const std::map<std::string, core::AffordanceConfig_t> map = problemSolver()->map
+                        <core::AffordanceConfig_t> ();*/
 				}
 				hpp::doubleSeq* Afford::getAffordanceConfig (const char* affType)
 					throw (hpp::Error)
 				{
-                    if (!problemSolver()->has
-						<core::AffordanceConfig_t> (affType)) {
+                    if (!problemSolver()->affordanceConfigs.has(affType)) {
 						throw hpp::Error ("No given affordance type found in Afford::getAffordanceConfig");
 					}
-                    const vector3_t& config = problemSolver()->get
-						<core::AffordanceConfig_t> (affType);
+                    const vector3_t& config = problemSolver()->affordanceConfigs.get(affType);
 					hpp::doubleSeq* conf = new hpp::doubleSeq ();
 					conf->length ((CORBA::ULong)config.size ());
 					for (std::size_t idx = 0; idx < conf->length(); idx++) {
@@ -116,49 +110,40 @@ namespace hpp
 				void Afford::setMargin (const char* affType, CORBA::Double margin)
 					throw (hpp::Error)
 				{
-                                    if (!problemSolver()->has
-						<core::AffordanceConfig_t> (affType)) {
+                                    if (!problemSolver()->affordanceConfigs.has(affType)) {
 						throw hpp::Error ("No given affordance type found in Afford::setMargin");
 					}
-                    vector3_t config = problemSolver()->get
-						<core::AffordanceConfig_t> (affType);
+                    vector3_t config = problemSolver()->affordanceConfigs.get(affType);
 					config[0] = margin;
 					
-                    problemSolver()->add
-						<core::AffordanceConfig_t> (affType, config);
+                    problemSolver()->affordanceConfigs.add(affType, config);
 				}
 
 				void Afford::setNeighbouringTriangleMargin (const char* affType,
 					CORBA::Double nbTriMargin) throw (hpp::Error)
 				{
-                    if (!problemSolver()->has
-						<core::AffordanceConfig_t> (affType)) {
+                    if (!problemSolver()->affordanceConfigs.has(affType)) {
 						throw hpp::Error ("No given affordance type found in Afford::setNeighbouringTriangleMargin");
 					}
-                    vector3_t config = problemSolver()->get
-						<core::AffordanceConfig_t> (affType);
+                    vector3_t config = problemSolver()->affordanceConfigs.get(affType);
 					config[1] = nbTriMargin;
 					
-                    problemSolver()->add
-						<core::AffordanceConfig_t> (affType, config);
+                    problemSolver()->affordanceConfigs.add(affType, config);
 				}
 
 				void Afford::setMinimumArea (const char* affType, CORBA::Double minArea)
 					throw (hpp::Error)
 				{
-                    if (!problemSolver()->has
-						<core::AffordanceConfig_t> (affType)) {
+                    if (!problemSolver()->affordanceConfigs.has(affType)) {
 						throw hpp::Error ("No given affordance type found in Afford::setMinimunArea");
 					}
-                    vector3_t config = problemSolver()->get
-						<core::AffordanceConfig_t> (affType);
+                    vector3_t config = problemSolver()->affordanceConfigs.get(affType);
 					config[2] = minArea;
 					
-                    problemSolver()->add
-						<core::AffordanceConfig_t> (affType, config);
+                    problemSolver()->affordanceConfigs.add(affType, config);
 				}
 
-        bool isBVHModelTriangles (const fcl::CollisionObjectPtr_t& object)
+        bool isBVHModelTriangles (const hpp::pinocchio::FclCollisionObjectPtr_t& object)
         {
             if (object->collisionGeometry ()->getNodeType () == fcl::BV_OBBRSS) {
                 const affordance::BVHModelOBConst_Ptr_t model = boost::static_pointer_cast<const affordance::BVHModelOB>
@@ -200,7 +185,7 @@ namespace hpp
       		}
 					try {
             affordance::SemanticsDataPtr_t aff = affordance::affordanceAnalysis
-                ((problemSolver()->obstacle (obstacleName))->fcl (), operations);
+                ((problemSolver()->obstacle (obstacleName)->fcl()) , operations);
  					  std::vector<std::vector<fcl::CollisionObjectPtr_t > > affObjs = 
                       affordance::getReducedAffordanceObjects( aff,reduceSizes);
 						// add fcl::CollisionObstacles to problemSolver
@@ -229,9 +214,9 @@ namespace hpp
                         reduceSizes.push_back(reduceSizesCorba[(CORBA::ULong)i]);
                     }
 					// first clear all old affordances:
-                    problemSolver()->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
+                    problemSolver()->affordanceObjects.clear();// clear <std::vector<boost::shared_ptr<hpp::pinocchio::CollisionObject> > > ();
 					affordance::OperationBases_t operations = createOperations ();
-					for (std::list <boost::shared_ptr<model::CollisionObject> >::const_iterator objIt = 
+                    for (hpp::ObjectStdVector_t::const_iterator objIt =
                         problemSolver()->collisionObstacles ().begin ();
                         objIt != problemSolver()->collisionObstacles ().end (); objIt++)
 						{
@@ -246,27 +231,23 @@ namespace hpp
 				{
 					const std::string noObject = "";
 					if (obstacleName == noObject) {
-                        problemSolver()->erase
-							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
+                        problemSolver()->affordanceObjects.erase(affordance);
 					} else {
-              if (!problemSolver()->has <std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance)) {
+              if (!problemSolver()->affordanceObjects.has(affordance)) {
                   std::cout << "Afford::deleteAffordanceByType: no affordance objects to delete" << std::endl;
                   return;
               }
-						std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
-                            problemSolver()->get
-							<std::vector<boost::shared_ptr<model::CollisionObject> > > (affordance);
+                        AffordanceObjects_t affs =
+                            problemSolver()->affordanceObjects.get(affordance);
 
 						for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++)
 						{
-							if (affs[objIdx]->name () == obstacleName) {
+                            if (affs[objIdx].first == obstacleName) {
 								affs.erase(affs.begin () + objIdx);
 								objIdx--;
 							}
 						}
-                        problemSolver()->add
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >
-							(affordance,affs);
+                        problemSolver()->affordanceObjects.add(affordance,affs);
 					}
 				}
 
@@ -277,27 +258,25 @@ namespace hpp
 					const std::string noObject = "";
 					if (obstacleName == noObject) {
 						// if no obstacleName given, delete all affs in problemSolver
-                        problemSolver()->clear <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
+                        //problemSolver()->clear <std::vector<boost::shared_ptr<hpp::pinocchio::CollisionObject> > > ();
+                        problemSolver()->affordanceObjects.clear();
 					} else {
-                        std::list<std::string> keys =  problemSolver()->getKeys
-							<std::vector<boost::shared_ptr<model::CollisionObject> >, 
-							std::list<std::string> > ();
+                        std::list<std::string> keys = problemSolver()->obstacleNames(true, false); /*problemSolver()->getKeys
+                            <std::vector<boost::shared_ptr<hpp::pinocchio::CollisionObject> >,
+                            std::list<std::string> > ();*/
 						std::list<std::string>::iterator affIt = keys.begin ();
 						for (; affIt != keys.end (); affIt++) {
-							std::vector<boost::shared_ptr<model::CollisionObject> > affs = 
-                                problemSolver()->get
-								<std::vector<boost::shared_ptr<model::CollisionObject> > > (*affIt);
+                            AffordanceObjects_t affs =
+                                problemSolver()->affordanceObjects.get(*affIt);
 
 							for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++)
 							{
-								if (affs[objIdx]->name () == obstacleName) {
+                                if (affs[objIdx].first == obstacleName) {
 									affs.erase(affs.begin () + objIdx);
 									objIdx--;
 								}
 							}
-                            problemSolver()->add
-								<std::vector<boost::shared_ptr<model::CollisionObject> > >
-								(*affIt,affs);
+                            problemSolver()->affordanceObjects.add(*affIt,affs);
 						} 
 					}
 				}
@@ -309,24 +288,19 @@ namespace hpp
 				{
 					for (unsigned int opIdx = 0; opIdx < ops.size (); opIdx++)
 					{
-						std::vector<boost::shared_ptr<model::CollisionObject> > objs;
+                        AffordanceObjects_t objs;
 						affordance::CollisionObjects_t affs = affObjs[opIdx];
 						for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++) {
-							boost::shared_ptr<model::CollisionObject> obj =
-							model::CollisionObject::create (affs[objIdx], obstacleName);
-							objs.push_back (obj);
+                            FclCollisionObjectSharePtr_t obj =
+                            FclCollisionObjectSharePtr_t (new FclCollisionObject(*(affs[objIdx])));
+                            objs.push_back (std::make_pair(obstacleName, obj));
 						}
-                        if (problemSolver()->has
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >
-							(ops[opIdx]->affordance_)) {
-							std::vector<boost::shared_ptr<model::CollisionObject> > 
-                                mapObjs = problemSolver()->get
-								<std::vector<boost::shared_ptr<model::CollisionObject> > >
-								(ops[opIdx]->affordance_);
+                        if (problemSolver()->affordanceObjects.has(ops[opIdx]->affordance_)) {
+                            //std::vector<FclCollisionObjectSharePtr_t >
+                            AffordanceObjects_t mapObjs = problemSolver()->affordanceObjects.get(ops[opIdx]->affordance_);
 							objs.insert (objs.begin () + objs.size (), mapObjs.begin (), mapObjs.end ());
 						}
-                        problemSolver()->add
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >(ops[opIdx]->affordance_, objs);
+                        problemSolver()->affordanceObjects.add(ops[opIdx]->affordance_, objs);
 					}
 				}
 				
@@ -334,22 +308,18 @@ namespace hpp
 					throw (hpp::Error)
 					{
 						hpp::doubleSeqSeqSeqSeq *affs;
-                        if (!problemSolver()->has
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >
-							(std::string (affordance))) {
+                        if (!problemSolver()->affordanceObjects.has(std::string (affordance))) {
 							throw hpp::Error ("No affordance type of given name found. Unable to get affordance points.");
 							}
-						std::vector<boost::shared_ptr<model::CollisionObject> > affObjs =
-                            problemSolver()->get
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >
-							(affordance);
+                       const AffordanceObjects_t & affObjs =
+                            problemSolver()->affordanceObjects.get(affordance);
 						std::size_t nbAffs = affObjs.size ();
 						affs = new hpp::doubleSeqSeqSeqSeq ();
 						affs->length ((CORBA::ULong)nbAffs);
 						for (std::size_t affIdx = 0; affIdx < nbAffs; affIdx++)
 						{
 							affordance::BVHModelOBConst_Ptr_t model =
-								affordance::GetModel (affObjs[affIdx]->fcl());
+                                affordance::GetModel (affObjs[affIdx].second.get());
 							std::size_t nbTris = model->num_tris;
 							hpp::doubleSeqSeqSeq tris;
 							tris.length ((CORBA::ULong)nbTris);
@@ -359,9 +329,9 @@ namespace hpp
 									const fcl::Triangle& refTri = model->tri_indices[triIdx];
 									triangle.length (3);
 									for (unsigned int vertIdx= 0; vertIdx < 3; vertIdx++) {
-								    fcl::Vec3f p (affObjs[affIdx]->fcl ()->getRotation () * 
+                                    fcl::Vec3f p (affObjs[affIdx].second->getRotation () *
 											model->vertices [refTri[vertIdx]] +
-											affObjs[affIdx]->fcl ()->getTranslation ());
+                                            affObjs[affIdx].second->getTranslation ());
 								  	hpp::doubleSeq point;
 								  	// point always 3D
 								  	point.length (3);
@@ -396,20 +366,15 @@ namespace hpp
 					throw (hpp::Error)
 				{
 						std::vector<std::string> objList;
-                        if (!problemSolver()->has
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >
-							(std::string (affordance))) {
+                        if (!problemSolver()->affordanceObjects.has(std::string (affordance))) {
 							throw hpp::Error ("No affordance type of given name found. Unable to get reference collision object.");
 							}
-						std::vector<boost::shared_ptr<model::CollisionObject> > affObjs =
-                            problemSolver()->get
-							<std::vector<boost::shared_ptr<model::CollisionObject> > >
-							(affordance);
+                        AffordanceObjects_t affObjs = problemSolver()->affordanceObjects.get(affordance);
 						for (std::size_t affIdx = 0; affIdx < affObjs.size (); affIdx++)
 						{
-							affordance::BVHModelOBConst_Ptr_t model =
-								affordance::GetModel (affObjs[affIdx]->fcl());
-						objList.push_back(affObjs[affIdx]->name ());
+                            /*affordance::BVHModelOBConst_Ptr_t model =
+                                affordance::GetModel (affObjs[affIdx]->fcl());*/
+                        objList.push_back(affObjs[affIdx].first);
 						}
 						hpp::Names_t* objListPtr = fromStringVector (objList);
 						return objListPtr;
@@ -417,32 +382,23 @@ namespace hpp
 
 				hpp::Names_t* Afford::getAffordanceTypes () throw (hpp::Error)
 				{
-					const std::map<std::string, std::vector<boost::shared_ptr<
-                        model::CollisionObject> > >& affMap = problemSolver()->map
-            <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
-        	if (affMap.empty ()) {
+                    std::vector<std::string> affTypes = problemSolver()->affordanceObjects.getKeys<std::vector<std::string> >();
+            if (affTypes.empty ()) {
         		throw hpp::Error ("No affordances found. Return empty list.");
-        	}
-                    std::vector<std::string> affTypes = problemSolver()->getKeys
-            <std::vector<boost::shared_ptr<model::CollisionObject> >,
-							std::vector<std::string> > ();
+            }
 					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
 					return affTypeListPtr;
 				}
 
         hpp::Names_t* Afford::getAffordanceConfigTypes () throw (hpp::Error)
-				{
-                    const std::map<std::string, core::AffordanceConfig_t>& affMap = problemSolver()->map
-            <core::AffordanceConfig_t> ();
-        	if (affMap.empty ()) {
+                {
+            std::vector<std::string> affTypes = problemSolver()->affordanceConfigs.getKeys< std::vector<std::string> >();
+            if (affTypes.empty ()) {
         	 std::cout << "No affordance configs found. Return empty list." << std::endl;
            hpp::Names_t* empty = new hpp::Names_t ();
            empty->length (0);
            return empty;
           }
-                    std::vector<std::string> affTypes = problemSolver()->getKeys
-            <core::AffordanceConfig_t,
-							std::vector<std::string> > ();
 					hpp::Names_t* affTypeListPtr = fromStringVector (affTypes);
 					return affTypeListPtr;
 				}

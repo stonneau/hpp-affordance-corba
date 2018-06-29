@@ -33,7 +33,7 @@ namespace hpp
 
     typedef fcl::CollisionGeometry CollisionGeometry_t;
     typedef boost::shared_ptr <CollisionGeometry_t> CollisionGeometryPtr_t;
-    typedef model::Transform3f Transform3f;
+    typedef hpp::pinocchio::Transform3f Transform3f;
     typedef fcl::BVHModel < fcl::RSS > Polyhedron_t;
     typedef boost::shared_ptr <Polyhedron_t> PolyhedronPtr_t;
     typedef fcl::ShapeBase BasicShape_t;
@@ -43,10 +43,10 @@ namespace hpp
     typedef std::map <std::string, std::vector <fcl::Triangle> > TriangleMap_t;
     typedef std::map <std::string, std::vector <fcl::Vec3f> > VertexMap_t;
 
-    typedef model::matrix_t matrix_t;
-    typedef model::vector_t vector_t;
-    typedef model::vector3_t vector3_t;
-    typedef model::size_type size_type;
+    typedef hpp::pinocchio::matrix_t matrix_t;
+    typedef hpp::pinocchio::vector_t vector_t;
+    typedef hpp::pinocchio::vector3_t vector3_t;
+    typedef hpp::pinocchio::size_type size_type;
     namespace impl
     {
       using CORBA::Boolean;
