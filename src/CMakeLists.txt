@@ -71,7 +71,6 @@ ADD_LIBRARY(${LIBRARY_NAME}
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_cpp)
 ADD_DEPENDENCIES (${LIBRARY_NAME} generate_idl_python)
 
-PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-model)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-corbaserver)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-affordance)
 PKG_CONFIG_USE_DEPENDENCY(${LIBRARY_NAME} hpp-template-corba)
@@ -136,7 +135,6 @@ TARGET_LINK_LIBRARIES (hpp-affordance-server ${LIBRARY_NAME})
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-corbaserver)
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-template-corba)
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-util)
-PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-model)
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-affordance)
 
 INSTALL (TARGETS hpp-affordance-server DESTINATION ${CMAKE_INSTALL_BINDIR})

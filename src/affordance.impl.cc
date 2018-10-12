@@ -291,8 +291,10 @@ namespace hpp
                         AffordanceObjects_t objs;
 						affordance::CollisionObjects_t affs = affObjs[opIdx];
 						for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++) {
-                            FclCollisionObjectSharePtr_t obj =
-                            FclCollisionObjectSharePtr_t (new FclCollisionObject(*(affs[objIdx])));
+                            /*FclCollisionObjectSharePtr_t obj =
+                            FclCollisionObjectSharePtr_t (new FclCollisionObject(*(affs[objIdx])));*/
+                            problemSolver()->addObstacle(obstacleName,*(affs[objIdx]),false,false);
+                            hpp::pinocchio::CollisionObjectPtr_t obj  = problemSolver()->obstacle (obstacleName);
                             objs.push_back (std::make_pair(obstacleName, obj));
 						}
                         if (problemSolver()->affordanceObjects.has(ops[opIdx]->affordance_)) {
@@ -319,7 +321,7 @@ namespace hpp
 						for (std::size_t affIdx = 0; affIdx < nbAffs; affIdx++)
 						{
 							affordance::BVHModelOBConst_Ptr_t model =
-                                affordance::GetModel (affObjs[affIdx].second.get());
+                                affordance::GetModel (affObjs[affIdx].second->fcl());
 							std::size_t nbTris = model->num_tris;
 							hpp::doubleSeqSeqSeq tris;
 							tris.length ((CORBA::ULong)nbTris);
@@ -329,9 +331,9 @@ namespace hpp
 									const fcl::Triangle& refTri = model->tri_indices[triIdx];
 									triangle.length (3);
 									for (unsigned int vertIdx= 0; vertIdx < 3; vertIdx++) {
-                                    fcl::Vec3f p (affObjs[affIdx].second->getRotation () *
+                                    fcl::Vec3f p (affObjs[affIdx].second->fcl()->getRotation () *
 											model->vertices [refTri[vertIdx]] +
-                                            affObjs[affIdx].second->getTranslation ());
+                                            affObjs[affIdx].second->fcl()->getTranslation ());
 								  	hpp::doubleSeq point;
 								  	// point always 3D
 								  	point.length (3);
