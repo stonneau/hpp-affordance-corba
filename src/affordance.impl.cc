@@ -16,6 +16,7 @@
 #include "hpp/affordance/operations.hh"
 #include <hpp/pinocchio/collision-object.hh>
 #include <hpp/core/problem-solver.hh>
+#include <string>
 #include "affordance.impl.hh"
 
 namespace hpp
@@ -29,6 +30,9 @@ namespace hpp
   {
     namespace impl
     {
+
+        const std::string affSuffix = "aff";
+
         Afford::Afford () {}
 				
                 Afford::Afford (const core::ProblemSolverPtr_t& /*problemSolver*/) {}
@@ -252,9 +256,11 @@ namespace hpp
 				}
 
 				// delete all affordances for given object
-				void Afford::deleteAffordances (const char* obstacleName)
+                void Afford::deleteAffordances (const char* obstacleNameNonAff)
 					throw (hpp::Error)
 				{
+                    std::string obstacleName (obstacleNameNonAff);
+                    obstacleName += affSuffix;
 					const std::string noObject = "";
 					if (obstacleName == noObject) {
 						// if no obstacleName given, delete all affs in problemSolver
@@ -265,18 +271,26 @@ namespace hpp
                             <std::vector<boost::shared_ptr<hpp::pinocchio::CollisionObject> >,
                             std::list<std::string> > ();*/
 						std::list<std::string>::iterator affIt = keys.begin ();
-						for (; affIt != keys.end (); affIt++) {
-                            AffordanceObjects_t affs =
-                                problemSolver()->affordanceObjects.get(*affIt);
-
-							for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++)
-							{
-                                if (affs[objIdx].first == obstacleName) {
-									affs.erase(affs.begin () + objIdx);
-									objIdx--;
-								}
-							}
-                            problemSolver()->affordanceObjects.add(*affIt,affs);
+                        for (; affIt != keys.end (); affIt++)
+                        {
+                            for (std::map<std::string, AffordanceObjects_t>::iterator kit =
+                                 problemSolver()->affordanceObjects.map.begin(); kit != problemSolver()->affordanceObjects.map.end();
+                                 ++kit)
+                            {
+                                if((kit->first).find((*affIt)) != std::string::npos)
+                                {
+                                    problemSolver()->removeObstacle(kit->first);
+                                    AffordanceObjects_t& affs =kit->second;
+                                    for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++)
+                                    {
+                                        if (affs[objIdx].first == obstacleName) {
+                                            affs.erase(affs.begin () + objIdx);
+                                            objIdx--;
+                                        }
+                                    }
+                                    problemSolver()->affordanceObjects.add(*affIt,affs);
+                                }
+                            }
 						} 
 					}
 				}
@@ -284,8 +298,10 @@ namespace hpp
 
 				void Afford::addAffObjects (const affordance::OperationBases_t& ops,
 					const std::vector<affordance::CollisionObjects_t>& affObjs,
-					const char* obstacleName) throw (hpp::Error)
+                    const char* obstacleNameNonAff) throw (hpp::Error)
 				{
+                    std::string obstacleName (obstacleNameNonAff);
+                    obstacleName += affSuffix;
 					for (unsigned int opIdx = 0; opIdx < ops.size (); opIdx++)
 					{
                         AffordanceObjects_t objs;
@@ -293,15 +309,18 @@ namespace hpp
 						for (unsigned int objIdx = 0; objIdx < affs.size (); objIdx++) {
                             /*FclCollisionObjectSharePtr_t obj =
                             FclCollisionObjectSharePtr_t (new FclCollisionObject(*(affs[objIdx])));*/
-                            problemSolver()->addObstacle(obstacleName,*(affs[objIdx]),false,false);
-                            hpp::pinocchio::CollisionObjectPtr_t obj  = problemSolver()->obstacle (obstacleName);
-                            objs.push_back (std::make_pair(obstacleName, obj));
+                            std::stringstream ss;  ss << opIdx << "_" << objIdx;
+                            std::string ig = obstacleName + ss.str();
+                            problemSolver()->addObstacle(ig,*(affs[objIdx]),false,false);
+                            hpp::pinocchio::CollisionObjectPtr_t obj  = problemSolver()->obstacle (ig);
+                            objs.push_back (std::make_pair(ig, obj));
 						}
                         if (problemSolver()->affordanceObjects.has(ops[opIdx]->affordance_)) {
                             //std::vector<FclCollisionObjectSharePtr_t >
                             AffordanceObjects_t mapObjs = problemSolver()->affordanceObjects.get(ops[opIdx]->affordance_);
 							objs.insert (objs.begin () + objs.size (), mapObjs.begin (), mapObjs.end ());
 						}
+                        problemSolver()->affordanceObjects.erase(ops[opIdx]->affordance_);
                         problemSolver()->affordanceObjects.add(ops[opIdx]->affordance_, objs);
 					}
 				}

@@ -181,6 +181,7 @@ class AffordanceTool (object):
         import re
         objNames = self.client.basic.obstacle.getObstacleNames(True,False)
         for name in objNames:
+          print "obs name ", name
           splt = re.split ('/', name)
           if splt[0] == prefix :
             self.analyseObject (name,reduceSizes)
