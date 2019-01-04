@@ -34,7 +34,7 @@ namespace hpp
         const std::string affSuffix = "aff";
 
         Afford::Afford () {}
-				
+
                 Afford::Afford (const core::ProblemSolverPtr_t& /*problemSolver*/) {}
 
         void Afford::setProblemSolverMap
@@ -43,7 +43,7 @@ namespace hpp
           psMap_ = psMap;
 					resetAffordanceConfig ();
         }
-				
+
 				void Afford::resetAffordanceConfig() throw (hpp::Error)
 				{
                     problemSolver()->affordanceConfigs.add("Support", vector3_t (0.3,0.3,0.05));
@@ -71,7 +71,7 @@ namespace hpp
 
             affordance::SupportOperationPtr_t support
 						(new affordance::SupportOperation(sconf[0], sconf[1], sconf[2]));
-      		affordance::LeanOperationPtr_t lean 
+      		affordance::LeanOperationPtr_t lean
 						(new affordance::LeanOperation(lconf[0], lconf[1], lconf[2]));
             affordance::Support45OperationPtr_t support45
                         (new affordance::Support45Operation(s45conf[0], s45conf[1], s45conf[2]));
@@ -119,7 +119,7 @@ namespace hpp
 					}
                     vector3_t config = problemSolver()->affordanceConfigs.get(affType);
 					config[0] = margin;
-					
+
                     problemSolver()->affordanceConfigs.add(affType, config);
 				}
 
@@ -131,7 +131,7 @@ namespace hpp
 					}
                     vector3_t config = problemSolver()->affordanceConfigs.get(affType);
 					config[1] = nbTriMargin;
-					
+
                     problemSolver()->affordanceConfigs.add(affType, config);
 				}
 
@@ -143,7 +143,7 @@ namespace hpp
 					}
                     vector3_t config = problemSolver()->affordanceConfigs.get(affType);
 					config[2] = minArea;
-					
+
                     problemSolver()->affordanceConfigs.add(affType, config);
 				}
 
@@ -161,9 +161,9 @@ namespace hpp
 
         bool Afford::checkModel (const char* obstacleName) throw (hpp::Error)
         {
-          std::list<std::string> obstacles = 
+          std::list<std::string> obstacles =
                         problemSolver()->obstacleNames(false, true);
-					std::list<std::string>::iterator objIt = std::find 
+					std::list<std::string>::iterator objIt = std::find
 						(obstacles.begin (), obstacles.end (), obstacleName);
 					if (objIt == obstacles.end ()) {
     	      throw hpp::Error ("No obstacle by given name found. Unable to analyse.");
@@ -177,9 +177,9 @@ namespace hpp
           void Afford::affordanceAnalysis (const char* obstacleName,
                     const affordance::OperationBases_t & operations, std::vector<double> reduceSizes) throw (hpp::Error)
 	      {
-					std::list<std::string> obstacles = 
+					std::list<std::string> obstacles =
                         problemSolver()->obstacleNames(true, true);
-					std::list<std::string>::iterator objIt = std::find 
+					std::list<std::string>::iterator objIt = std::find
 						(obstacles.begin (), obstacles.end (), obstacleName);
                     while(reduceSizes.size()<operations.size())
                         reduceSizes.push_back(0.);
@@ -190,7 +190,7 @@ namespace hpp
 					try {
             affordance::SemanticsDataPtr_t aff = affordance::affordanceAnalysis
                 ((problemSolver()->obstacle (obstacleName)->fcl()) , operations);
- 					  std::vector<std::vector<fcl::CollisionObjectPtr_t > > affObjs = 
+ 					  std::vector<std::vector<fcl::CollisionObjectPtr_t > > affObjs =
                       affordance::getReducedAffordanceObjects( aff,reduceSizes);
 						// add fcl::CollisionObstacles to problemSolver
 						addAffObjects (operations, affObjs, obstacleName);
@@ -206,7 +206,7 @@ namespace hpp
                         reduceSizes.push_back(reduceSizesCorba[(CORBA::ULong)i]);
                     }
 					// first erase affordance information for obstacleName
-				  deleteAffordances(obstacleName);	
+				  deleteAffordances(obstacleName);
 					affordance::OperationBases_t operations = createOperations ();
                     affordanceAnalysis (obstacleName, operations,reduceSizes);
 				}
@@ -291,7 +291,7 @@ namespace hpp
                                     problemSolver()->affordanceObjects.add(*affIt,affs);
                                 }
                             }
-						} 
+						}
 					}
 				}
 
@@ -324,8 +324,8 @@ namespace hpp
                         problemSolver()->affordanceObjects.add(ops[opIdx]->affordance_, objs);
 					}
 				}
-				
-				hpp::doubleSeqSeqSeqSeq* Afford::getAffordancePoints (char const* affordance) 
+
+				hpp::doubleSeqSeqSeqSeq* Afford::getAffordancePoints (char const* affordance)
 					throw (hpp::Error)
 					{
 						hpp::doubleSeqSeqSeqSeq *affs;

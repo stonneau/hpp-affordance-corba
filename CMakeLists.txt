@@ -21,28 +21,18 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 SET(CXX_DISABLE_WERROR true)
 
 INCLUDE(cmake/base.cmake)
-INCLUDE(cmake/cpack.cmake)
 INCLUDE(cmake/idl.cmake)
 INCLUDE(cmake/python.cmake)
+INCLUDE(cmake/hpp.cmake)
 
+SET(PROJECT_ORG humanoid-path-planner)
 SET(PROJECT_NAME hpp-affordance-corba)
 SET(PROJECT_DESCRIPTION "Corba server for Humanoid Path Planner Affordance applications")
-SET(PROJECT_URL "")
-SET(${PROJECT_NAME}_HEADERS
-
-  include/hpp/corbaserver/affordance/fwd.hh
-  include/hpp/corbaserver/affordance/server.hh
-)
+SET(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
 SET(CUSTOM_HEADER_DIR hpp/corbaserver/affordance)
 
 SETUP_PROJECT ()
-
-# Activate hpp-util logging if requested
-SET (HPP_DEBUG FALSE CACHE BOOL "trigger hpp-util debug output")
-IF (HPP_DEBUG)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHPP_DEBUG")
-ENDIF()
 
 # Dependencies
 ADD_REQUIRED_DEPENDENCY("hpp-core >= 3")
@@ -66,6 +56,7 @@ ENDIF()
 
 PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
 
+ADD_SUBDIRECTORY(include/${CUSTOM_HEADER_DIR})
 ADD_SUBDIRECTORY(src)
 
 CONFIG_FILES (include/hpp/corbaserver/affordance/doc.hh)
@@ -77,23 +68,24 @@ install(FILES
   data/package.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   )
+
 install(FILES
   data/urdf/hyq/hyq_trunk_large.urdf
   data/urdf/darpa.urdf
-	data/urdf/box.urdf
+  data/urdf/box.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 
 install(FILES
   data/srdf/hyq/hyq_trunk_large.srdf
   data/srdf/darpa.srdf
-	data/srdf/box.srdf
+  data/srdf/box.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 
 install(FILES
   data/meshes/darpareduced.stl
-	data/meshes/box.stl
+  data/meshes/box.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
 
@@ -104,4 +96,3 @@ install(FILES
   )
 
 SETUP_PROJECT_FINALIZE()
-SETUP_PROJECT_CPACK()

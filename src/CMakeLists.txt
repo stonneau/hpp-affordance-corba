@@ -130,7 +130,7 @@ ENDFOREACH()
 
 # Standalone corba server
 ADD_EXECUTABLE (hpp-affordance-server hpp-affordance-corba.cc)
-TARGET_LINK_LIBRARIES (hpp-affordance-server ${LIBRARY_NAME})
+TARGET_LINK_LIBRARIES (hpp-affordance-server ${LIBRARY_NAME} hpp-affordance)
 
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-corbaserver)
 PKG_CONFIG_USE_DEPENDENCY(hpp-affordance-server hpp-template-corba)
