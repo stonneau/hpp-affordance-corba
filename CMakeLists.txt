@@ -25,14 +25,12 @@ INCLUDE(cmake/idl.cmake)
 INCLUDE(cmake/python.cmake)
 INCLUDE(cmake/hpp.cmake)
 
-SET(PROJECT_ORG humanoid-path-planner)
 SET(PROJECT_NAME hpp-affordance-corba)
 SET(PROJECT_DESCRIPTION "Corba server for Humanoid Path Planner Affordance applications")
-SET(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
 SET(CUSTOM_HEADER_DIR hpp/corbaserver/affordance)
 
-SETUP_PROJECT ()
+SETUP_HPP_PROJECT ()
 
 # Dependencies
 ADD_REQUIRED_DEPENDENCY("hpp-core >= 3")
