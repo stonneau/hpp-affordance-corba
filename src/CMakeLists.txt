@@ -84,6 +84,9 @@ PYTHON_INSTALL_ON_SITE(
   hpp/corbaserver/affordance corba.py ${PYTHON_SITELIB}
   )
 PYTHON_INSTALL_ON_SITE(
+  hpp/corbaserver/affordance __init__.py ${PYTHON_SITELIB}
+  )
+PYTHON_INSTALL_ON_SITE(
   hpp/corbaserver/affordance client.py ${PYTHON_SITELIB}
   )
 PYTHON_INSTALL_ON_SITE(
